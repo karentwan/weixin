@@ -13,7 +13,7 @@
 	startTime=startTime.replace(/\s/g,"");
 	poststr="accout="+account+"&name="+name+"&startTime="+startTime+"&dateCount="+dateCount+"&reason="+reason
 	+"&reasonDetail="+reasonDetail;
-	url="";
+	url="http://weixin.ngrok.natapp.cn/weixin2.0/leave";
 	var send = function(){
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("post",url,true);

@@ -17,6 +17,7 @@ public class LeaveServlet {
 	 * 200表示操作成功
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
+System.out.println("leaveStart doGet.........................");
 		//获得学号
 		String account = request.getParameter("account");
 		String name = request.getParameter("name");

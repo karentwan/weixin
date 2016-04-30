@@ -143,7 +143,7 @@ main {
 }
 
 #gw--datetimepicker-header {
-  font-family: 微软雅黑;
+  font-family: 寰蒋闆呴粦;
   font-weight: bold;
 }
 
@@ -187,7 +187,7 @@ main {
 }
 
 #gw--datetimepicker-body table thead {
-  font-family: 微软雅黑;
+  font-family: 寰蒋闆呴粦;
 }
 
 #gw--datetimepicker-body table tbody {
@@ -207,11 +207,11 @@ main {
 }
 
 #gw--datetimepicker-selected-year::after {
-  content: "年";
+  content: "骞�;
 }
 
 #gw--datetimepicker-selected-month::after {
-  content: "月";
+  content: "鏈�;
 }
 
 #gw--datetimepicker-year,

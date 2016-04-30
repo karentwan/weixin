@@ -93,7 +93,7 @@ public class LeaveDao {
 	 * 根据学号查询辅导员姓名
 	 */
 	public String queryName(Statement stmt, String account) {
-		String name = "";
+		String name = null;
 		String sql = "select name from tb_instructor where id in (select instructor_id from tb_student where account = '" + account +"'";
 		ResultSet rs = null;
 		try {
