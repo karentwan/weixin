@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import com.weixin.exception.NameNotFoundException;
 import com.weixin.util.Db;
 
 /**
@@ -24,22 +25,22 @@ public class LeaveDao {
 	}
 	
 	/**
-	 * 0表示插入成功
-	 * 1表示插入失败
+	 * 插入请假信息到数据库里面
 	 * @return
 	 */
-	public int insert(String account, String name, String startTime, String endTime, String reasonDetail, String reason) {
-		int code = 0;
+	public int insert(String account, String name, String startTime, String endTime, String reasonDetail) {
+		int code = 200;
 		Connection conn = Db.getConnection();
 		Statement stmt = null;
 		try {
 			conn.setAutoCommit(false);
 			stmt = conn.createStatement();
 			String instructor = queryName(stmt, account);
-			if(reasonDetail == null)
-				reasonDetail = reason;
+			if( instructor == null) {
+				throw new NameNotFoundException("您的辅导员未知，不能帮你请假，sorry!");
+			}
 			String sql = "insert into tb_leave values(null, '" + account + "', '" + name + "', '" + startTime + "', '" + endTime + "', "
-					+ "'" + reasonDetail + "', '" + instructor + "'";
+					+ "'" + reasonDetail + "', '" + instructor + "')";
 			//将请假信息插入到数据库
 			stmt.execute(sql);
 			conn.commit();
@@ -49,7 +50,15 @@ public class LeaveDao {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			code = 1;
+			code = 406;
+			e.printStackTrace();
+		} catch (NameNotFoundException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			code = 404;
 			e.printStackTrace();
 		} finally {
 			try {
@@ -94,7 +103,10 @@ public class LeaveDao {
 	 */
 	public String queryName(Statement stmt, String account) {
 		String name = null;
-		String sql = "select name from tb_instructor where id in (select instructor_id from tb_student where account = '" + account +"'";
+		//左连接查询查询辅导员姓名
+		String sql = "select name from tb_instru where id in ( select c.instructor_id from tb_student as s left join tb_class "
+				+ "as c on s.class_id = c.id where s.account = '" + account +"')";
+System.out.println("sql:" + sql);
 		ResultSet rs = null;
 		try {
 			rs = stmt.executeQuery(sql);

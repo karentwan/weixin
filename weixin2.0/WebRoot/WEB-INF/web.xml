@@ -61,6 +61,30 @@
     	<servlet-name>bind</servlet-name>
     	<url-pattern>/bind</url-pattern>
     </servlet-mapping>
+  <servlet>
+    	<servlet-name>querySign</servlet-name>
+    	<servlet-class>com.weixin.servlet.QuerySignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>querySign</servlet-name>
+    	<url-pattern>/qurySign</url-pattern>
+    </servlet-mapping>
+  <servlet>
+    	<servlet-name>instruOauth</servlet-name>
+    	<servlet-class>com.weixin.servlet.InstruOauthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>instruOauth</servlet-name>
+    	<url-pattern>/instruOauth</url-pattern>
+    </servlet-mapping>
+  <servlet>
+    	<servlet-name>manager</servlet-name>
+    	<servlet-class>com.weixin.servlet.ManagerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>manager</servlet-name>
+    	<url-pattern>/manager</url-pattern>
+    </servlet-mapping>
     
     
 

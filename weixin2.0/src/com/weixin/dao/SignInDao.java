@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.weixin.exception.NullIdException;
 import com.weixin.util.Db;
 
 /**
- * ����ǩ����dao��
+ * 学生签到的信息记录
  * @author wan
  */
 public class SignInDao {
@@ -30,11 +32,65 @@ public class SignInDao {
 	}
 	
 	/**
-	 * 插入信息到数据库
-	 * 0 表示插入成功
-	 * 1表示插入失败
+	 * 签到记录的插入
+	 * @param account
+	 * @param name
+	 * @param time
+	 * @param instruId
 	 * @return
 	 */
+	public int insert(String account, String name, String time, String instruId) {
+		int code = 0;
+		Connection conn = Db.getConnection();
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			String in = queryInstructor(account, stmt, instruId);
+			String accAndTime = account+time;
+			//插入当天的签到信息到数据库里面
+			String sql = "insert into tb_sign_in(account, name, time, instructor_name, accAndTime, core) values('"
+					+ account +"','" + name+ "','" + time + "','" +in + "', '" + accAndTime + "', 1)";
+System.out.println("sql:" + sql);
+			//查询所拥有的积分
+			String querySql = "select count(core) from tb_sign_in where account = '" + account + "'";
+			stmt.execute(sql);
+			rs = stmt.executeQuery(querySql);
+			if(rs.next()) {
+				code = rs.getInt(1);
+			}
+			conn.commit();
+		} catch( NullIdException e) {
+			code = -1;
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			code = -1;
+			e.printStackTrace();
+		} finally {
+			try {
+				if( rs != null)
+					rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return code;
+	}
+	
+	@Deprecated
 	public int insert(String account, String name, String time) {
 		int code = 0;
 		Connection conn = Db.getConn();
@@ -65,6 +121,7 @@ public class SignInDao {
 		}
 		return code;
 	}
+	
 	/**
 	 * @param floor
 	 * @param dormitory
@@ -109,7 +166,7 @@ public class SignInDao {
 	}
 	
 	/**
-	 * 查询空调统计结果
+	 * 查询空调的总数
 	 */
 	public StringBuffer queryCondition() {
 		StringBuffer sb = new StringBuffer();
@@ -126,7 +183,7 @@ public class SignInDao {
 				String count = rs.getString(2);
 				sb.append("{\"floor\":\"" + floor + "\",\"dormitoryCount\":\"" + count + "\"},");
 			}
-			//ɾ�����һ������
+			//删锟斤拷锟斤拷锟揭伙拷锟斤拷锟斤拷锟�
 			sb.deleteCharAt(sb.length()-1);
 		} catch (SQLException e) {
 			try {
@@ -144,7 +201,7 @@ public class SignInDao {
 	}
 	
 	/**
-	 * 查询所有的楼栋
+	 * 查询所有已经预约空调的寝室
 	 * @return
 	 */
 	public Map<String, List<String>> queryDormitory() {
@@ -157,7 +214,7 @@ public class SignInDao {
 			String sql = "select floor, dormitory from tb_condition";
 			rs = stmt.executeQuery(sql);
 			while( rs.next() ) {
-				//获取楼栋
+				//楼栋
 				String floor = rs.getString(1);
 				String dormitory = rs.getString(2);
 				if( map.get(floor) == null) {
@@ -182,13 +239,15 @@ public class SignInDao {
 	
 	
 	/**
-	 * 根据openId查询学生的学号和姓名
-	 * @param openId 微信的唯一ID
-	 * @return 一个含有学号和姓名的List集合
+	 * 查询当前的openId是否已经绑定了学生微信号
+	 * @param openId 
+	 * @return 
 	 */
 	public List<String> query(String openId) {
 		Connection conn = Db.getConn();
-		String sql = "select account, name from tb_student where openId = '" + openId + "'";
+		String sql = "select s.account, s.name, c.instructor_id from tb_student as s left join tb_class as c on s.class_id = c.id where openId = "
+				+ "'" + openId + "'";
+System.out.println("openId:" + openId);
 		List<String> rl = new ArrayList<String>();
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -196,8 +255,9 @@ public class SignInDao {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			if( rs.next() ) {
-				rl.add(rs.getString("account"));
-				rl.add(rs.getString("name"));
+				rl.add(rs.getString(1));
+				rl.add(rs.getString(2));
+				rl.add(rs.getString(3));
 			} else {
 				rl.add("");
 			}
@@ -216,11 +276,9 @@ public class SignInDao {
 	}
 	
 	/**
-	 * 查询指定学号的辅导员
-	 * @param account 学号
-	 * @param stmt Statement对象
-	 * @return 辅导员姓名
+	 * 根据学号查询辅导员姓名
 	 */
+	@Deprecated
 	public String queryInstructor(String account, Statement stmt) {
 		String name = null;
 		String sql = "select name from tb_instructor where id in (select instructor_id from tb_student where account = '" + account + "')";
@@ -241,5 +299,39 @@ public class SignInDao {
 		}
 		return name;
 	}
+	
+	/**
+	 * 根据辅导员Id查询辅导员姓名
+	 * @param account
+	 * @param stmt
+	 * @param instruId
+	 * @return
+	 */
+	public String queryInstructor(String account, Statement stmt, String instruId) throws NullIdException {
+		String name = null;
+		//如果班级没有被辅导员管理，那么将不能签到
+		if( instruId == null) {
+			throw new NullIdException("instruId为空");
+		} 
+		int id = Integer.parseInt(instruId);
+		String sql = "select name from tb_instru where id = " + id;
+		ResultSet rs = null;
+		try {
+			rs = stmt.executeQuery(sql);
+			if( rs.next() ) {
+				name = rs.getString(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return name;
+	}
+	
 	
 }

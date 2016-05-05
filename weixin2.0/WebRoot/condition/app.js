@@ -2,8 +2,9 @@
 	var state = {
 		'isValidate' : false,
 		'errCount' : 0,
-		 'baseURL': 'http://070411.com/xuesiji/condition'
+//		 'baseURL': 'http://070411.com/xuesiji/condition'
 //		'baseURL' : 'http://localhost:8080/xuesiji/condition'
+		'baseURL' : "http://weixin2.ngrok.natapp.cn/weixin2.0/condition"
 	};
 
 	// init validate

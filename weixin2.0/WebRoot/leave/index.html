@@ -2,130 +2,59 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
 	<meta name="viewport"content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
-	<link href="qingjia.css" rel="stylesheet" type="text/css"/>
+	<title>南昌航空大学请假单</title>
+	<link rel="stylesheet" href="css1/appointment.css">
+	<link rel="stylesheet" href="2.css">
+	<script type="text/javascript" src="my.js"></script>
+<style type="text/css">
+.labCalendar{
+	height:12px;
+	width:80px;
+	display:block;
+	border:1px solid #ff9900;
+	background-color:#fff0e1;
+	padding:5px 5px 2px 5px;/* 定位顺序 Top right bottom left */
+	font-size:12px;
+	font-weight:bold;
+}
+.labCalendar:hover{
+	height:12px;
+	width:80px;
+	display:block;
+	border:1px solid #ff9900;
+	background-color:#ffdcb9;
+	padding:5px 5px 2px 5px;/* 定位顺序 Top right bottom left */
+	font-size:12px;
+	font-weight:bold;
+}
+</style>
+<link rel="stylesheet" href="css/calendar.css" />
+<script type="text/javascript" src="js/calendar.js"></script>
 </head>
 <body>
-<form>
-	<div class="group"><span class="head">
-	<h3>请假表</h3>
-	</span>
+	<form id="appointmentForm">
+		<h1>南昌航空大学请假单</h1>
+ 		<input type="text" name="name"       placeholder="姓名" 	id="name" 		required="" minlength="1" maxlength="20">
+ 		<input type="text" name="number"   placeholder="学号"  id="account"    required="" maxlength="8" minlength="3">
+ 		<input type="text" name="dateCount" placeholder="天数" 	id="dateCount" required="" maxlength="2" minlength="1">
+ 		<input name="lable" onFocus="setday(this);" size="9" maxlength="10"  readonly>
+        <div class="center-on-page">
+		  <div class="select">
+		    <select name="slct" id="slct">
+		      <option id="bing">生病</option>
+		      <option value="1" id="shi">家中有事</option>
+		      <option value="2" id="huo">活动</option>
+		      <option value="3" id="keke">其他</option>
+		    </select>
+		  </div>
+		</div>
+		<input type="text" name="reasonDetail"   placeholder="详细原因"  id="reasonDetail"    required="" maxlength="50" minlength="3" style="display: none;">
+ 		<button id="submit">提交</button>
+	</form>
+	<div class="footer">
+		<img src="footer.jpg" alt="">
 	</div>
-  <div class="group">
-  <input type="text" id="name" required>
-  <span class="foo"></span>
-  <label>姓名</label>
-  </div>
-  <div class="group">
-    <input type="text" id="account" required>
-  <span class="foo"></span>
-  <label>学号</label>
-  </div>
-  <div class="group">
-    <input type="text" id="dateCount" required>
-  <span class="foo"></span>
-  <label>天数</label>
-  </div>
-
-
-
-
-   <div class="group">
-     <main>
-  <div>
-    <label for="date-container">选择日期：</label>
-    <input type="text" id="date-container" required/>
-  </div>
-
-  <div id="gw--datetimepicker">
-    <header id="gw--datetimepicker-header">
-      <ul>
-        <li id="gw--datetimepicker-prev">&lt;</li>
-        <li id="gw--datetimepicker-selected-year">0000</li>
-        <li id="gw--datetimepicker-selected-month">00</li>
-        <li id="gw--datetimepicker-next">&gt;</li>
-      </ul>
-    </header>
-    <div id="gw--datetimepicker-body" data-selected="day">
-      <div id="gw--datetimepicker-year" class="gw--datetimepicker-box" style="display: none;">
-        <table>
-          <tbody id="gw--datetimepicker-year-body"></tbody>
-        </table>
-      </div>
-      <div id="gw--datetimepicker-month" class="gw--datetimepicker-box" style="display: none;">
-        <table>
-          <tbody id="gw--datetimepicker-month-body">
-            <tr>
-              <td class="gw--month">1</td>
-              <td class="gw--month">2</td>
-              <td class="gw--month">3</td>
-              <td class="gw--month">4</td>
-            </tr>
-            <tr>
-              <td class="gw--month">5</td>
-              <td class="gw--month">6</td>
-              <td class="gw--month">7</td>
-              <td class="gw--month">8</td>
-            </tr>
-            <tr>
-              <td class="gw--month">9</td>
-              <td class="gw--month">10</td>
-              <td class="gw--month">11</td>
-              <td class="gw--month">12</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="gw--datetimepicker-day" class="gw--datetimepicker-box" style="display: block;">
-        <table>
-          <thead>
-            <tr>
-              <th>日</th>
-              <th>一</th>
-              <th>二</th>
-              <th>三</th>
-              <th>四</th>
-              <th>五</th>
-              <th>六</th>
-            </tr>
-          </thead>
-          <tbody id="gw--datetimepicker-day-body"></tbody>
-        </table>
-      </div>
-    </div>
-    <footer id="gw--datetimepicker-footer">
-      <button id="gw--now">今天</button>
-    </footer>
-  </div>
-</main>
-  </div>
-
-
-
-
-
-  <div class="group">
-  <h1>请假原因</h1>
-    <select  id="reason">
-      <option value="生病">生病</option>
-      <option value="家中有事">家中有事</option>
-      <option value="办手续">办手续</option>
-      <option value="其他填写详细信息">其他填写详细信息</option>
-    </select>
-</div>
-<div class="group">
-    <h1>请假具体信息</h1>
-	<input type="text" id="reasonDetail" required>
-</div>
-  <div class="group">
-    <p id="last"></p>
-    <input type="submit" id="submit" value="提交">
-    <span class="foo"></span>
-  </div>
-</form>
- <script src="qingjia.js"></script>
-  <script src="qingjia2.js"></script>
-
+	<script src="qingjia2.js"></script>
 </body>
 </html>

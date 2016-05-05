@@ -29,14 +29,11 @@ public class OauthUtil {
 		//拼装访问地址
 		String requestUrl = "https://api.weixin.qq.com/sns/oauth2/access_token"
 				+ "?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
-		//https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
-		
 		requestUrl = requestUrl.replace("APPID", appId);
 		requestUrl = requestUrl.replace("SECRET", appSecret.trim());
 		requestUrl = requestUrl.replace("CODE", code.trim());
 		//获取网页的授权
 		JSONObject jsonObject = MenuUtil.httpRequest(requestUrl, "GET", null);
-System.out.println("requestUrl:" + requestUrl);
 		if( null != jsonObject) {
 			try {
 				wot = new WeixinOauth2Token();

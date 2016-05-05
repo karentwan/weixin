@@ -20,9 +20,9 @@ import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.weixin.model.response.Article;
-import com.weixin.model.response.BaseMessage;
-import com.weixin.model.response.NewsMessage;
+import com.weixin.model.Article;
+import com.weixin.model.BaseMessage;
+import com.weixin.model.NewsMessage;
 
 public class MessageUtil {
 

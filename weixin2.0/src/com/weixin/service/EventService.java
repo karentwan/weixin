@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import com.weixin.dao.SignInDao;
-import com.weixin.model.response.Article;
-import com.weixin.model.response.BaseMessage;
-import com.weixin.model.response.NewsMessage;
-import com.weixin.model.response.TextMessage;
+import com.weixin.model.Article;
+import com.weixin.model.BaseMessage;
+import com.weixin.model.NewsMessage;
+import com.weixin.model.TextMessage;
 import com.weixin.util.Constant;
 import com.weixin.util.MessageUtil;
 import com.weixin.util.WeixinUtil;
@@ -52,21 +53,22 @@ public class EventService {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			//格式化当前的时间，使它变成2016-04-17格式
 			String time = sdf.format(new Date());
+System.out.println("hour:" + hour);
 			//创建签到回复信息
 			TextMessage signText = new TextMessage();
 			if( account.equals("")) {
-				signText.setContent("<a href=\""+ WeixinUtil.prop.getProperty("xuesiji")+"/xuesiji/bind.html?openId="+ base.getToUserName() +"\">点我绑定微信号</a>");
-			} else if( hour >= 23 || hour <= 21) {
+				signText.setContent("<a href=\""+ WeixinUtil.prop.getProperty("xuesiji")+"/bind/bind.html?openId="+ base.getToUserName() +"\">点我绑定微信号</a>");
+			} else if( hour >= 23 ) {
 				signText.setContent("现在不是签到时间，不能签到，抱歉！");
-				//最后的结果成功签到
+				//能够签到
 			} else {
-				int code = signInDao.insert(account, rl.get(1), time);
-				//签到成功的情况
-				if( code == 0) {
-					signText.setContent("恭喜你，签到成功，积分+1!");
-					//签到失败的情况
-				} else if( code == 1) {
+				int code = signInDao.insert(account, rl.get(1), time, rl.get(2));
+				//签到失败的情况
+				if( code == -1) {
 					signText.setContent("签到失败，请重新签到！");
+					//签到成功的情况
+				} else {
+					signText.setContent("恭喜你，签到成功，您当前总积分为:" + code + "!");
 				}
 			}
 			MessageUtil.loadDataFromBase(base, signText);
