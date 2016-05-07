@@ -11,6 +11,9 @@ import com.weixin.dao.SignInDao;
 
 public class ConditionQueryServlet extends HttpServlet{
 	
+	private static final long serialVersionUID = 1L;
+
+	@SuppressWarnings("null")
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		StringBuffer sb = null;
 		PrintWriter out = null;

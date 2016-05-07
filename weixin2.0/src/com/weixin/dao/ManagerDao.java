@@ -20,6 +20,7 @@ public class ManagerDao {
 			md = new ManagerDao();
 		return md;
 	}
+	
 	/**
 	 * 辅导员将班级归为自己管理
 	 * @param listClass 所有班级的集合

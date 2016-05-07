@@ -4,43 +4,22 @@
 	<meta charset="UTF-8">
 	<meta name="viewport"content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
 	<title>南昌航空大学请假单</title>
-	<link rel="stylesheet" href="css1/appointment.css">
-	<link rel="stylesheet" href="2.css">
-	<script type="text/javascript" src="my.js"></script>
-<style type="text/css">
-.labCalendar{
-	height:12px;
-	width:80px;
-	display:block;
-	border:1px solid #ff9900;
-	background-color:#fff0e1;
-	padding:5px 5px 2px 5px;/* 定位顺序 Top right bottom left */
-	font-size:12px;
-	font-weight:bold;
-}
-.labCalendar:hover{
-	height:12px;
-	width:80px;
-	display:block;
-	border:1px solid #ff9900;
-	background-color:#ffdcb9;
-	padding:5px 5px 2px 5px;/* 定位顺序 Top right bottom left */
-	font-size:12px;
-	font-weight:bold;
-}
-</style>
-<link rel="stylesheet" href="css/calendar.css" />
-<script type="text/javascript" src="js/calendar.js"></script>
+	<link rel="stylesheet" href="css/appointment.css">
+	<link rel="stylesheet" href="css/2.css">
+	<link rel="stylesheet" type="text/css" href="css/DateTimePicker.css" />
+	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="js/DateTimePicker.js"></script>
 </head>
 <body>
-	<form id="appointmentForm">
+	<form id="g">
 		<h1>南昌航空大学请假单</h1>
- 		<input type="text" name="name"       placeholder="姓名" 	id="name" 		required="" minlength="1" maxlength="20">
- 		<input type="text" name="number"   placeholder="学号"  id="account"    required="" maxlength="8" minlength="3">
+ 		<input type="text" name="name"  placeholder="姓名" 	id="name" required="" minlength="1" maxlength="20">
+ 		<input type="text" name="number"  placeholder="学号"  id="account"  required="" maxlength="8" minlength="3">
  		<input type="text" name="dateCount" placeholder="天数" 	id="dateCount" required="" maxlength="2" minlength="1">
- 		<input name="lable" onFocus="setday(this);" size="9" maxlength="10"  readonly>
+ 		<input type="text" placeholder="开始时间" data-field="date" id="startTime" readonly>
+		<div id="dtBox"></div>
         <div class="center-on-page">
-		  <div class="select">
+		  <div class="select" id="se">
 		    <select name="slct" id="slct">
 		      <option id="bing">生病</option>
 		      <option value="1" id="shi">家中有事</option>
@@ -49,12 +28,44 @@
 		    </select>
 		  </div>
 		</div>
-		<input type="text" name="reasonDetail"   placeholder="详细原因"  id="reasonDetail"    required="" maxlength="50" minlength="3" style="display: none;">
- 		<button id="submit">提交</button>
+		<input type="text" name="reasonDetail"   placeholder="详细原因"  id="reasonDetail"    required="" maxlength="50" minlength="3" style="display:none;">
+ 		<button type="button" id="submit">提交</button>
 	</form>
 	<div class="footer">
 		<img src="footer.jpg" alt="">
 	</div>
-	<script src="qingjia2.js"></script>
+	<script src="js/qingjia2.js"></script>
+	<script type="text/javascript">
+		
+			$(document).ready(function() 
+			{
+				var bIsPopup = displayPopup();
+			
+				$("#dtBox").DateTimePicker(
+				{
+					isPopup: bIsPopup,
+				
+					addEventHandlers: function()
+					{
+						var dtPickerObj = this;
+					
+						$(window).resize(function()
+						{
+							bIsPopup = displayPopup();
+							dtPickerObj.setIsPopup(bIsPopup);
+						});
+					}
+				});
+			});
+		
+			function displayPopup()
+			{
+				if($(document).width() >= 768)
+					return false;
+				else
+					return true;
+			}
+		
+		</script>
 </body>
 </html>

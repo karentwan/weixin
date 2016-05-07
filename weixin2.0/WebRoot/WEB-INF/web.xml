@@ -85,6 +85,14 @@
     	<servlet-name>manager</servlet-name>
     	<url-pattern>/manager</url-pattern>
     </servlet-mapping>
+  <servlet>
+    	<servlet-name>instruBind</servlet-name>
+    	<servlet-class>com.weixin.servlet.InstruBindServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>instruBind</servlet-name>
+    	<url-pattern>/instruBind</url-pattern>
+    </servlet-mapping>
     
     
 

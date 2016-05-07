@@ -3,20 +3,14 @@ package com.weixin.service;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
-
 import com.weixin.model.BaseMessage;
 import com.weixin.model.TextMessage;
 import com.weixin.util.Constant;
 import com.weixin.util.MessageUtil;
 
 public class CoreService {
-	
-	private static final Logger log = Logger.getLogger("debug");
 	
 	/**
 	 * 业务核心类，处理请求

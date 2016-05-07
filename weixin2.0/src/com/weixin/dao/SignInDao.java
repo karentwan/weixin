@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.weixin.exception.NullIdException;
 import com.weixin.util.Db;
 
@@ -183,7 +182,7 @@ System.out.println("sql:" + sql);
 				String count = rs.getString(2);
 				sb.append("{\"floor\":\"" + floor + "\",\"dormitoryCount\":\"" + count + "\"},");
 			}
-			//删锟斤拷锟斤拷锟揭伙拷锟斤拷锟斤拷锟�
+			//删除最后一个字符
 			sb.deleteCharAt(sb.length()-1);
 		} catch (SQLException e) {
 			try {

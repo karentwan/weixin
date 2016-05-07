@@ -15,6 +15,9 @@ import com.weixin.dao.InstruDao;
 public class InstruBindServlet extends HttpServlet {
 
 	
+	private static final long serialVersionUID = 1L;
+
+	@SuppressWarnings("null")
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		
 		PrintWriter out = null;

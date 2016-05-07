@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.weixin.exception.DuplicateBindException;
 import com.weixin.exception.NameNotFoundException;
 import com.weixin.util.Db;
 
@@ -77,7 +79,11 @@ System.out.println(sql);
 			} else {
 				throw new NameNotFoundException("辅导员姓名没有找到");
 			}
-			String insertSql = "insert into tb_instructor values(null, '" + openId + "', " + id;
+			boolean flag = isBind(stmt, name);
+			if( flag) {
+				throw new DuplicateBindException("这个微信号已经跟辅导员绑定了，不能重复 绑定");
+			}
+			String insertSql = "insert into tb_instructor values(null, '" + openId + "', " + id + ")";
 			stmt.execute(insertSql);
 			conn.commit();
 		} catch (SQLException e) {
@@ -90,6 +96,14 @@ System.out.println(sql);
 			e.printStackTrace();
 		} catch (NameNotFoundException e) {
 			code = 404;
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} catch ( DuplicateBindException e) {
+			code = 406;
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
@@ -161,9 +175,11 @@ System.out.println(sql);
 		map.put("account", listAccount);
 		map.put("name", listName);
 		Connection conn = Db.getConnection();
-		String sql = "select account, name from tb_sign_in where id not in ("
-				+ "select id from tb_sign_in where instructor_name = '" + name + "' "
-						+ "and time = '" + time + "')";
+		String sql ="select s.account, s.name, s.id from tb_student as s right join (select c.num, c.id, i.name from "
+				+ "tb_class as c left join tb_instru as i on c.instructor_id = i.id  where i.name='"
+				+name+"') as o on s.class_id = o.id where s.id not in (select id from tb_student where name in (select name from tb_sign_in where instructor_name = '"
+						+ name +"' and time = '" + time +"'))";
+System.out.println("sql:" + sql);
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -203,6 +219,7 @@ System.out.println(sql);
 		Connection conn = Db.getConnection();
 		String sql = "select account, name from tb_leave where startTime <= '" +time+"' and endTime >= '" + time +""
 				+ "' and instructor_name = '" + name + "'";
+System.out.println("leave sql:" + sql);
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -228,6 +245,32 @@ System.out.println(sql);
 		return map;
 	}
 	
-	
+	/**
+	 * 判断辅导员是否已经绑定了微信号
+	 * @param name 辅导员姓名
+	 * @return true 表示已经绑定了微信号
+	 * 	false 表示还没有绑定微信号
+	 */
+	private boolean isBind(Statement stmt, String name) {
+		boolean flag = false;
+		String sql = "select * from tb_instructor as d left join tb_instru as b on d.tb_instru_id = b.id where b.name = "
+				+ "'" + name + "'";
+		ResultSet rs = null;
+		try {
+			rs = stmt.executeQuery(sql);
+			if( rs.next() ) {
+				flag = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return flag;
+	}
 	
 }

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 import com.weixin.exception.NameNotFoundException;
 import com.weixin.util.Db;
 
@@ -106,7 +108,6 @@ public class LeaveDao {
 		//左连接查询查询辅导员姓名
 		String sql = "select name from tb_instru where id in ( select c.instructor_id from tb_student as s left join tb_class "
 				+ "as c on s.class_id = c.id where s.account = '" + account +"')";
-System.out.println("sql:" + sql);
 		ResultSet rs = null;
 		try {
 			rs = stmt.executeQuery(sql);
@@ -123,6 +124,40 @@ System.out.println("sql:" + sql);
 			}
 		}
 		return name;
+	}
+	
+	/**
+	 * 查询是否已经请假
+	 * 	true:没请假  flase:已请假
+	 * @return
+	 */
+	public boolean isLeave(String account, String stuName, String startTime) {
+		boolean flag = true;
+		Connection conn = Db.getConnection();
+		Statement stmt = null;
+		String name = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			name = queryName(stmt, account);
+			String sql = "select account, name from tb_leave where startTime <= '" +startTime+"' and endTime >= '" + startTime +""
+					+ "' and instructor_name = '" + name + "' and name = '" + stuName + "'";
+			rs = stmt.executeQuery(sql);
+			if( rs.next()) {
+				flag = false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return flag;
 	}
 	
 	
