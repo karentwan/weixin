@@ -22,7 +22,11 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.weixin.model.Article;
 import com.weixin.model.BaseMessage;
+import com.weixin.model.ImageMessage;
 import com.weixin.model.NewsMessage;
+import com.weixin.model.VideoMessage;
+import com.weixin.model.Voice;
+import com.weixin.model.VoiceMessage;
 
 public class MessageUtil {
 
@@ -87,6 +91,38 @@ public class MessageUtil {
 		xstream.alias("xml", news.getClass());
 		xstream.alias("item", Article.class);
 		return xstream.toXML(news);
+	}
+	
+	/**
+	 * 图片接口
+	 * @param image
+	 * @return
+	 */
+	public static String clazzToXml(ImageMessage image) {
+		xstream.alias("xml", image.getClass());
+		xstream.aliasField("Image", image.getClass(), "image");
+		return xstream.toXML(image);
+	}
+	
+	/**
+	 * 将语音接口的pojo类转换成为xml文件
+	 * @param voice
+	 */
+	public static String clazzToXml(VoiceMessage voice) {
+		xstream.alias("xml", voice.getClass());
+		xstream.aliasField("Voice", voice.getClass(), "voice");
+		xstream.aliasField("MediaId", Voice.class, "mediaId");
+		return xstream.toXML(voice);
+	}
+	/**
+	 * 回复视频消息的xml转换
+	 * @param video
+	 * @return
+	 */
+	public static String clazzToXml(VideoMessage video) {
+		xstream.alias("xml", video.getClass());
+		xstream.aliasField("Video", video.getClass(), "video");
+		return xstream.toXML(video);
 	}
 	
 	/**

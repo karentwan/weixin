@@ -26,6 +26,10 @@ public class EventService {
 	 */
 	private static SignInDao signInDao = SignInDao.getInstance();
 	
+	private static Calendar calendar = Calendar.getInstance();
+	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	
 	/**
 	 * 处理事件的函数
 	 * 直接由这个函数产生应该怎样回复的信息
@@ -48,12 +52,9 @@ public class EventService {
 			List<String> rl = signInDao.query(openId);
 			String account = rl.get(0);
 			//获取当前时间
-			Calendar c = Calendar.getInstance();
-			int hour = c.get(Calendar.HOUR_OF_DAY);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			int hour = calendar.get(Calendar.HOUR_OF_DAY);
 			//格式化当前的时间，使它变成2016-04-17格式
 			String time = sdf.format(new Date());
-System.out.println("hour:" + hour);
 			//创建签到回复信息
 			TextMessage signText = new TextMessage();
 			if( account.equals("")) {

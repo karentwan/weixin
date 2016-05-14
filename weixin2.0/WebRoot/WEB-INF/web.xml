@@ -67,7 +67,7 @@
     </servlet>
     <servlet-mapping>
     	<servlet-name>querySign</servlet-name>
-    	<url-pattern>/qurySign</url-pattern>
+    	<url-pattern>/querySign</url-pattern>
     </servlet-mapping>
   <servlet>
     	<servlet-name>instruOauth</servlet-name>

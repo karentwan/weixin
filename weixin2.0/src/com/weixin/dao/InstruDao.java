@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.weixin.exception.DuplicateBindException;
 import com.weixin.exception.NameNotFoundException;
@@ -179,7 +180,6 @@ System.out.println(sql);
 				+ "tb_class as c left join tb_instru as i on c.instructor_id = i.id  where i.name='"
 				+name+"') as o on s.class_id = o.id where s.id not in (select id from tb_student where name in (select name from tb_sign_in where instructor_name = '"
 						+ name +"' and time = '" + time +"'))";
-System.out.println("sql:" + sql);
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -272,5 +272,186 @@ System.out.println("leave sql:" + sql);
 		}
 		return flag;
 	}
+	
+	public String queryAll(String name, String time) {
+		Map<String, List<String>> signMap = querySign(name, time);
+		Map<String, List<String>> unSignMap = queryUnSign(name, time);
+		Map<String, List<String>> leaveMap = queryLeave(name, time);
+		StringBuffer buffer = new StringBuffer();
+		List<String> accountList = signMap.get("account");
+		List<String> nameList = signMap.get("name");
+		buffer.append("{ \"signIn\": { \r\n");
+		for(int i = 0; i < accountList.size(); i++) {
+			buffer.append("\"" + accountList.get(i) + "\":");
+			buffer.append("\"" + nameList.get(i) + "\"");
+			buffer.append(",\r\n");
+		}
+		buffer.deleteCharAt(buffer.length()-3);
+		accountList = unSignMap.get("account");
+		nameList = unSignMap.get("name");
+		buffer.append("},\r\n\"disconnect\": {\r\n");
+		for( int i = 0; i < accountList.size(); i++) {
+			buffer.append("\"" + accountList.get(i) + "\":");
+			buffer.append("\"" + nameList.get(i) + "\"");
+			buffer.append(",\r\n");
+		}
+		buffer.deleteCharAt(buffer.length()-3);
+		accountList = leaveMap.get("account");
+		nameList = leaveMap.get("name");
+		buffer.append("},\r\n\"leave\": {\r\n");
+		for( int i = 0; i < accountList.size(); i++) {
+			buffer.append("\"" + accountList.get(i) + "\":");
+			buffer.append("\"" + nameList.get(i) + "\"");
+			buffer.append(",\r\n");
+		}
+		buffer.append("}\r\n}");
+		return buffer.toString();
+	}
+	
+	public String queryAllAndClazz(String name, String time) {
+		Connection conn = Db.getConnection();
+		Statement stmt = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			String sign = querySignInAndClazz(stmt, name, time);
+			String unSign = queryUnSignAndClazz(stmt, name, time);
+			String leave = queryLeaveAndClazz(stmt, name, time);
+			sb.append("{ signIn: ");
+			sb.append(sign);
+			sb.append(", disconnect :").append(unSign);
+			sb.append(", leave :").append(leave);
+			sb.append("}");
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 带上班级的查询
+	 * @param name 辅导员姓名
+	 */
+	public String queryUnSignAndClazz(Statement stmt, String name, String time) {
+		
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		String sql = "select s.account, s.name, s.id, o.c_id "
+				+ "from tb_student as s right join (select c.num, c.id, "
+				+ "i.name, c.num as c_id from tb_class as c left join tb_instru as i on "
+				+ "c.instructor_id = i.id  where i.name='"
+				+ name + "') as o on s.class_id = o.id where s.id not in "
+						+ "(select id from tb_student where name in (select name "
+						+ "from tb_sign_in where instructor_name = '"
+						+ name + "' and time = '"+ time + "'))";
+		ResultSet rs = null;
+		List<String> list = null;
+		try {
+			rs = stmt.executeQuery(sql);
+			while( rs.next() ) {
+				String clazz = rs.getString(4);
+				if( map.get(clazz) == null) 
+					map.put(clazz, new ArrayList<String>());
+				list = map.get(clazz);
+				list.add("{account :\"" + rs.getString(1) + "\",name :\""+rs.getString(2) + "\"}");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		String str = map.toString();
+		str = str.replace("=", ":");
+		return str;
+	}
+	
+	/**
+	 * 查询已经签到了的
+	 */
+	public String querySignInAndClazz(Statement stmt, String name, String time) {
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		String sql = "select oi.num, si.account, si.name from tb_sign_in as si right join "
+				+ "( select s.account, o.num from tb_student as s right join (select c.num, "
+				+ "c.id as c_id from tb_instru as i right join tb_class as c on i.id = c.instructor_id where i.name='"
+				+ name + "') as o on o.c_id = s.class_id) as oi on oi.account = si.account where time = '"
+						+ time + "' ";
+		
+		ResultSet rs = null;
+		List<String> list = null;
+		try {
+			rs = stmt.executeQuery(sql);
+			while( rs.next() ) {
+				String clazz = rs.getString(1);
+				if( map.get(clazz) == null) 
+					map.put(clazz, new ArrayList<String>());
+				list = map.get(clazz);
+				list.add("{account :\""+rs.getString(2) + "\", name :\""+rs.getString(3)+"\"}");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		String str = map.toString();
+		str = str.replace("=", ":");
+		return str;
+	}
+	
+	/**
+	 * 查询请假的人数
+	 */
+	public String queryLeaveAndClazz(Statement stmt, String name, String time) {
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		String sql = "select l.account, l.name, l.reasonDetail, o.num from "
+				+ "tb_leave as l left join ( select c.num, s.account from tb_class as c "
+				+ "left join tb_student as s on s.class_id = c.id ) as o using (account) where l.instructor_name = '"
+				+ name + "' and l.startTime <= '" + time +"' and l.endTime >= '" + time +"'";
+		ResultSet rs = null;
+		List<String> list = null;
+		try {
+			rs = stmt.executeQuery(sql);
+			while( rs.next() ) {
+				String clazz = rs.getString(4);
+				if( map.get(clazz) == null) 
+					map.put(clazz, new ArrayList<String>());
+				list = map.get(clazz);
+				list.add("{ account :\"" + rs.getString(1) + "\",name : \""+rs.getString(2) + "\", reason:\"" + rs.getString(3) + "\"}");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		String str = map.toString();
+		str = str.replace("=", ":");
+		return str;
+	}
+	
+	
 	
 }

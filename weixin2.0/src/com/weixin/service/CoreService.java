@@ -3,10 +3,15 @@ package com.weixin.service;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.dom4j.DocumentException;
+
 import com.weixin.model.BaseMessage;
 import com.weixin.model.TextMessage;
+import com.weixin.model.Voice;
+import com.weixin.model.VoiceMessage;
 import com.weixin.util.Constant;
 import com.weixin.util.MessageUtil;
 
@@ -41,10 +46,21 @@ public class CoreService {
 			if( content.contains("预约") || content.contains("空调")) {
 				text.setContent("预约时间暂时截止，请关注后续通知！");
 				respStr = MessageUtil.clazzToXml(text);
+			} else if( content.contains("队歌")) {
+				Voice v = new Voice();
+				v.setMediaId("dRudtQ38aiU2CNrUxQjlOxSQwm8Zhz8Oapj0Dwy6Heg");
+				v.setMediaId("b72tZL5XZk188O4tuhP_ZUvcLrGoKmKydSyjJjeOv76nsRfLMO7vcuekHccSzYSD");
+				v.setMediaId("gTsWRoZdddwN-IGTL8Mt0Sq3Npa2kONei02WdJcOG1w");
+				VoiceMessage voice = new VoiceMessage();
+				MessageUtil.loadDataFromBase(base, voice);
+				voice.setMsgType(Constant.REQ_TYPE_VOICE);
+				voice.setVoice(v);
+				respStr = MessageUtil.clazzToXml(voice);
+System.out.println("respStr:" + respStr);
 			} else {
 				text.setContent("您的留言我们已经收到!");
 				respStr = MessageUtil.clazzToXml(text);
-			}
+			} 
 		} else if(msgType.equals(Constant.REQ_TYPE_IMAGE)) {
 			
 		} else if(msgType.equals(Constant.REQ_TYPE_VOICE)) {
