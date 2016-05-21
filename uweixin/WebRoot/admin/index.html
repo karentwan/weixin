@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="izayl@163.com">
+	<title>U趣机器人创客俱乐部会员管理</title>
+	
+	<link href="http://g.alicdn.com/sj/dpl/1.5.1/css/sui.min.css" rel="stylesheet">
+	<script type="text/javascript" src="http://g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="http://g.alicdn.com/sj/dpl/1.5.1/js/sui.min.js"></script>
+	<style>
+		body{background-color: #f2f2f2;}
+		.center{
+			width:400px;
+			text-align: left;
+			margin: 2em auto;
+			border: 1px #eee solid;
+			padding-top: 2em;
+			background-color: #fff;
+			border-radius: 5px;
+			box-shadow: 2px 0px 5px 5px rgba(0,0,0,.5);
+		}
+		.input-control{height: 50px;}
+		.input-control input{padding-left: 2em;}
+	</style>
+</head>
+<body>
+	<div class="sui-navbar navbar-inverse">
+	  <div class="navbar-inner"><a href="#" class="sui-brand">U趣机器人创客俱乐部会员管理</a>
+	    <ul class="sui-nav">
+	      <li><a href="#">会员消费</a></li>
+	      <li><a href="#">会员充值</a></li>
+	      <li class="sui-dropdown"><a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">其他 <i class="caret"></i></a>
+	        <ul role="menu" class="sui-dropdown-menu">
+	          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">待开发</a></li>
+	          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">待开发</a></li>
+	          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">待开发</a></li>
+	        </ul>
+	      </li>
+	    </ul>
+	    <div class="pull-right">
+	    	<button class="sui-btn btn-info btn-xlarge">登录</button>
+	    </div>
+	    <form class="sui-form sui-form">
+	      <input type="text" placeholder="会员ID...">
+	      <button class="sui-btn">搜索</button>
+	    </form>
+	  </div>
+	</div>
+	<ul class="sui-breadcrumb">
+	  <li><a href="#">首页</a></li>
+	  <li class="active">管理员登录</li>
+	</ul>
+	<div class="sui-msg msg-large msg-block msg-success" style="width:400px;margin:0 auto;">
+	  <div class="msg-con">
+		管理员登录成功
+	  </div>
+	  <s class="msg-icon"></s>
+	</div>
+	<div class="sui-msg msg-large msg-block msg-error" style="width:400px;margin:0 auto;">
+	  <div class="msg-con">
+		登录失败
+	  </div>
+	  <s class="msg-icon"></s>
+	</div>
+
+	<form class="sui-form form-horizontal sui-validate center" action="http://weixin2.ngrok.natapp.cn/uweixin/login">
+	  <div class="control-group">
+	    <label for="inputEmail" class="control-label">管理员账号：</label>
+	    <div class="controls">
+	      <input class="input-xfat" type="text" id="inputEmail" placeholder="账号" name="name">
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label for="inputPassword" class="control-label">密码：</label>
+	    <div class="controls">
+	      <input class="input-xfat" type="password" id="inputPassword" placeholder="密码" name="psd">
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label"></label>
+	    <div class="controls">
+	      <label data-toggle="checkbox" class="checkbox-pretty inline">
+	        <input type="checkbox" name="remember-me"><span>记住我</span>
+	      </label>
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label"></label>
+	    <div class="controls">
+	      <button type="submit" class="sui-btn btn-primary">Sign in</button>
+	    </div>
+	  </div>
+	</form>
+
+	<script>
+		/***************Cookies Managent**************************/
+		/**
+		 * isCookiesEnable
+		 * 确定浏览器是否开启Cookie
+		 * @return {Boolean} 开启 ? ture : false
+		 */
+		var isCookiesEnable = function(){
+			return window.navigator.cookieEnabled;
+		};
+
+		var getAllCookies = function(){
+			return document.cookie;
+		};
+
+		var generateCookieObj = function(cookiesArr){
+			var obj = {};
+			var key = null, value = null;
+			for (var i = 0; i < cookiesArr.length; i++) {
+				key = cookiesArr[i].split('=')[0];
+				value = cookiesArr[i].split('=')[1];
+				obj[key] = value;
+			}
+			key = value = null;
+
+			return obj;
+		};
+		/***************End Cookies Managent**************************/
+		// 
+		/*******************Auto Login**********************/
+		var login = function(username, psd){
+			$.ajax({
+				url: 'http://weixin2.ngrok.natapp.cn/uweixin/login',
+				type: 'POST',
+				timeout:  1000,
+				data: {name: username, psd: psd},
+				success: function(){
+					alert("自动登陆成功！");
+				},
+				error: function(){
+					alert("网络错误！");
+				}
+			});
+		};
+		$(function(){
+			if (isCookiesEnable()) {
+				var cookiesArr = getAllCookies().split(";");
+				var cookieObj = generateCookieObj(cookiesArr);
+				login(cookieObj.username,cookieObj.psd);
+			} else {
+				alert("当前浏览器已关闭Cookie，无法自动登录");
+			}
+		}());
+		/*******************End Auto Login**********************/
+	</script>
+</body>
+</html>

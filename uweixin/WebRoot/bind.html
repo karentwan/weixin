@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="谢家兴">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, width=device-width, user-scalable=no">
+	<title>U趣机器人创客俱乐部</title>
+
+	<link rel="stylesheet" href="css/frozen.css">
+	<style>
+		.title{
+			background-color: rgb(246,247,249);
+			line-height: 45px;
+			padding-left: 10px;
+			color: #00a5e0;
+		}
+		.title p{color: #000;}
+		.banner{
+			background: url(img/about2.png) no-repeat;
+			background-position: center bottom;
+			-webkit-background-size: cover;
+			background-size: cover;
+			margin-bottom: 0.4em;
+		}
+	</style>
+</head>
+<body>
+
+	<header class="ui-header ui-header-positive ui-border-b">
+		<h1>会员绑定</h1>
+	</header>
+
+	<section class="ui-container ui-center">
+		<section class="ui-center ui-border-b banner" >
+			<!-- <img src="../img/about2.png" alt="" style="width:100%;"> -->
+		</section>
+		<h2 class="title">
+			输入会员名绑定微信号
+		</h2>
+		<div class="ui-form ui-border-t">
+			<form action="">
+				<div class="ui-form-item ui-form-item-show ui-border-b">
+					<label for="#">会员名</label>
+					<input type="text" id="username">
+				</div>
+			</form>
+			<div class="ui-btn-wrap">
+			    <button class="ui-btn-lg" id="submit">
+			        确认绑定
+			    </button>
+			</div>
+		</div>
+	</section>
+	
+	<script src="lib/zepto.min.js"></script>
+	<script src="js/frozen.js"></script>
+	<script>
+		$(function(){
+			var hasBinded = function(){
+				alert("当前微信号已绑定U趣会员！");
+				return;
+			};
+			var bindSuccess = function(username, data){
+				alert(username + " ，您的微信号绑定成功！\r\n \r\n");
+				$(".ui-form").remove();
+				$(".title").html("");
+				$('<h1>绑定成功</h1> <p>消费时请出示消费账号</p><p>消费账号和消费情况可在我的U趣中查询</p>').appendTo('.title');
+			};
+			var isEmpty = function(data){
+				return data.trim().length === 0;
+			};
+
+			var generateQuery = function(query){
+				var obj = {};
+				var key = null;
+				var value = null;
+				for (var i = 0; i < query.length; i++) {
+					key = query[i].split("=")[0];
+					value = query[i].split("=")[1];
+					obj[key] = value;
+				}
+				return obj;
+			};
+			var getQuery = function(){
+				var search = window.location.search;
+				if (search.indexOf("?") !== -1) {
+					search = search.substr(1);
+					var query = search.split('&');
+					return generateQuery(query);
+				}
+			};
+
+			var openid = getQuery().openId;
+			console.log(openid);
+
+			$("#submit").click(function(){
+				var username = $("#username").val();
+				
+				if (isEmpty(username)) {
+					alert("会员名不能为空！"); 
+					return;
+				}
+				$.ajax({
+					url: 'http://weixin2.ngrok.natapp.cn/uweixin/bind',
+					type: 'POST',
+					data: {openId: openid, userName: username},
+					// dataType: 'json',
+					timeout: 3000,
+					success: function(data){
+
+						if (parseInt(data, 10) < 0) hasBinded();
+						bindSuccess(username, data);
+					},
+					error: function(xhr, type) {
+						alert("网络错误, 请重试！");
+					}
+				});
+
+			});
+		});
+	</script>
+</body>
+</html>

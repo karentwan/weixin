@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="谢家兴">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, width=device-width, user-scalable=no">
+	<title>U趣机器人创客俱乐部</title>
+
+	<link rel="stylesheet" href="css/frozen.css">
+
+	<style>
+	.title{
+		background-color: rgb(246,247,249);
+		line-height: 45px;
+		padding-left: 10px;
+		color: #00a5e0;
+	}
+	/*reset thumb size*/
+	.ui-list-thumb{width: 30px;height: 30px;margin-top: 15px;}
+	</style>
+</head>
+<body>
+	<!-- footer tabs -->
+	<footer class="ui-footer ui-footer-btn">
+	    <ul class="ui-tiled ui-border-t">
+	        <li data-href="./about.html" class="ui-border-r"><div>走进U趣</div></li>
+	        <li data-href="./courses.html" class="ui-border-r"><div>课程体系</div></li>
+	        <li data-href="./actives.html" class="ui-border-r"><div>活动中心</div></li>
+	        <li data-href="./users.html"><div>我的U趣</div></li>
+	    </ul>
+	</footer>
+
+	<div class="ui-container">
+
+		<div class="ui-slider" style="height: 120px">
+		    <ul class="ui-slider-content" style="width: 300%">
+		        <li class="current"><span style="background-image:url(img/slider1.jpg)"></span></li>
+		        <li><span style="background-image:url(img/slider2.jpg)"></span></li>
+		        <li><span style="background-image:url(img/slider3.jpg)"></span></li>
+		        <li><span style="background-image:url(img/slider4.jpg)"></span></li>
+		    </ul>
+		</div>
+		<!-- /.ui-slider -->
+		<section>
+			<h3 class="title">U趣课程体系</h3>
+	    	<ul class="ui-list ui-list-one ui-list-link ui-border-tb">
+	    		<li class="ui-border-t" data-href="courses/age6ToAge8.html">
+	    			<div class="ui-list-thumb">
+	    				<span style="background-image: url(img/icon/age1.png);"></span>
+	    			</div>
+	    			<div class="ui-list-info">
+	    				<h4 class="ui-nowrap">6 - 8 岁</h4>
+	    			</div>
+	    		</li>
+	    		<li class="ui-border-t" data-href="courses/age7ToAge12.html">
+	    			<div class="ui-list-thumb">
+	    				<span style="background-image: url(img/icon/age2.png);"></span>
+	    			</div>
+	    			<div class="ui-list-info">
+	    				<h4 class="ui-nowrap">7 - 12 岁</h4>
+	    			</div>
+	    		</li>
+	    		<li class="ui-border-t" data-href="courses/age8ToAge15Mid.html">
+	    			<div class="ui-list-thumb">
+	    				<span style="background-image: url(img/icon/age31.png);"></span>
+	    			</div>
+	    			<div class="ui-list-info">
+	    				<h4 class="ui-nowrap">8 - 15 岁中级</h4>
+	    			</div>
+	    		</li>
+	    		<li class="ui-border-t" data-href="courses/age8ToAge15Pro.html">
+	    			<div class="ui-list-thumb">
+	    				<span style="background-image: url(img/icon/age32.png);"></span>
+	    			</div>
+	    			<div class="ui-list-info">
+	    				<h4 class="ui-nowrap">8 - 15 岁高级</h4>
+	    			</div>
+	    		</li>
+	    		<li class="ui-border-t" data-href="courses/ageOver9.html">
+	    			<div class="ui-list-thumb">
+	    				<span style="background-image: url(img/icon/age4.png);"></span>
+	    			</div>
+	    			<div class="ui-list-info">
+	    				<h4 class="ui-nowrap">9岁以上</h4>
+	    			</div>
+	    		</li>
+	    	</ul>
+
+		</section>
+		<!-- /.ui-panel -->
+		
+		<!-- content goes -->
+	</div>
+	<!-- /.ui-container -->
+	<script src="lib/zepto.min.js"></script>
+	<script src="js/frozen.js"></script>
+	<script>
+		window.addEventListener('load', function(){
+
+		    /* fz 即 FrozenJS 的意思 */
+		    var slider = new fz.Scroll('.ui-slider', {
+		        role: 'slider',
+		        indicator: true,
+		        autoplay: true,
+		        interval: 3000
+		    });
+		    $(".ui-list li, .ui-tiled li").click(function(){
+		    	if ($(this).data('href')) {
+		    		console.log($(this).data);
+		    		location.href = $(this).data('href');
+		    	}
+		    });
+		});
+	</script>
+</body>
+</html>

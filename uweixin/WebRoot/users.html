@@ -1,0 +1,258 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="谢家兴">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, width=device-width, user-scalable=no">
+	<title>U趣机器人创客俱乐部</title>
+
+	<link rel="stylesheet" href="css/frozen.css">
+
+	<style>
+		body{background-color: #f2f2f2;font-family: "Microsoft Yahei", "微软雅黑", "STXihei", sans-serif;}
+		.title{
+			background-color: transparent;
+			line-height: 45px;
+			color: #00a5e0;
+			margin-left: 1em;
+		}
+		.bg{
+			width: 100%;
+			height: 100px;
+			background-color: #ccc;
+			background: linear-gradient(to right bottom, #fff,#00a5e0);
+			display: flex;
+			display: -webkit-flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: flex-start;
+		}
+		.info{
+			display: inline-flex;
+			flex-direction: column;
+			margin: 20px 20px 20px 10px;
+			text-align: left;
+		}
+		.info .username{font-size: 20px; font-weight: bold;}
+		.info .vip{font-size: 12px; font-weight: small;}
+		.user .avatar{
+			width: 50px;
+			height: 50px;
+			margin: 20px 10px 20px 30px;
+			border-radius: 50%;
+			vertical-align: top;
+		}
+	</style>
+</head>
+<body>
+	<!-- footer tabs -->
+	<footer class="ui-footer ui-footer-btn">
+	    <ul class="ui-tiled ui-border-t" id="nav">
+	        <li data-href="about.html" class="ui-border-r"><div>走进U趣</div></li>
+	        <li data-href="courses.html" class="ui-border-r"><div>课程体系</div></li>
+	        <li data-href="actives.html" class="ui-border-r"><div>活动中心</div></li>
+	        <li data-href="users.html"><div>我的U趣</div></li>
+	    </ul>
+	</footer>
+
+	<div class="ui-container">
+		<div class="bg ui-center">
+			<div class="user">
+				<img class="avatar" src="img/logo.jpg" alt="">
+				<div class="info">
+ 					<span class="username" id="userName" style="display:none">用户名</span> 
+					<span class="vip" id="userId" style="display:none;">会员号</span>
+	 			<span style="line-height:50px;font-size:1.2em;color:#1a1a1a" id="bind">未绑定</span>	
+ 				</div>
+			</div>
+		</div>
+		<style>
+			.panel{
+				background-color: #fff;
+				width: 95%;
+				margin: 15px auto 0 auto;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				position: relative;
+			}
+			.panel img{height: 45px; height: 45px;margin: auto 10px;}
+			.panel .info .subtitle{color: #999;font-size: 14px;}
+			.dot{
+				position: absolute;
+				background-color: #f2f2f2;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+			}
+			.dot.left{left: -10px;}
+			.dot.right{right: -10px;}
+			.left{top: 3px;}
+			.left ~ .left{top: 33px;}
+			.left ~ .left ~ .left{top: 63px;}
+			.right{top: 3px;}
+			.right ~ .right{top: 33px;}
+			.right ~ .right ~ .right{top: 63px;}
+		</style>
+		<div class="panel">
+				<div class="dot left"></div>
+				<div class="dot left"></div>
+				<div class="dot left"></div>
+				<div class="dot right"></div>
+				<div class="dot right"></div>
+				<div class="dot right"></div>
+				<img src="img/icon/about.png" alt="">
+				<div class="info">
+					<span class="head">余额</span>
+					<span class="subtitle" id="money">0课时</span>
+				</div>
+		</div>
+		<section style="margin-bottom: 2em;">
+			<h3 class="title">历史消费</h3>
+			<ul class="ui-list ui-list-pure ui-border-tb" id="consume">
+<!-- 			    <li class="ui-border-t">
+			        <p><span class="date"> 2月12日</span></p>
+			        <h4>消费2个课时</h4>
+			    </li>
+			    <li class="ui-border-t">
+			        <p><span class="date"> 2月12日</span></p>
+			        <h4>消费1个课时</h4>
+			    </li>
+			    <li class="ui-border-t">
+			        <p><span class="date"> 2月12日</span></p>
+			        <h4>充值5个课时</h4>
+			    </li>-->
+				<li class="ui-border-t">
+			        <p>
+			        	<span class="date"> </span>
+		        	</p>
+			        <h4>暂无消费情况</h4>
+			    </li>
+ 			</ul>
+
+		</section>
+	</div>
+
+	<!-- /.ui-container -->
+	<script src="lib/zepto.min.js"></script>
+	<script src="js/frozen.js"></script>
+	<script>
+		window.addEventListener('load', function(){
+		    $(".ui-list li, .ui-tiled li").click(function(){
+		    	if ($(this).data('href')) {
+		    		console.log($(this).data);
+		    		location.href = $(this).data('href');
+		    	}
+		    });
+		});
+	</script>
+
+	<script>
+		$(function(){
+			/******************Query Tool*******************************/
+			var generateQuery = function(query){
+				var obj = {};
+				var key = null;
+				var value = null;
+				for (var i = 0; i < query.length; i++) {
+					key = query[i].split("=")[0];
+					value = query[i].split("=")[1];
+					obj[key] = value;
+				}
+				return obj;
+			};
+			var getQuery = function(){
+				var search = window.location.search;
+				if (search.indexOf("?") !== -1) {
+					search = search.substr(1);
+					var query = search.split('&');
+					return generateQuery(query);
+				}
+			};
+			/******************End  Query Tool*******************************/
+			var openid = getQuery().openId;
+
+			/******************Render Methods*******************************/
+			var userInfoRender = function(data){
+				var username = data.userName || "获取失败";
+				var userId   = data.userId   || "";
+				var money    = data.money    || 0;
+
+				$("#money").html(money + "课时");
+				$("#userName").html(username).show();
+				$("#userId").html(userId).show();
+				$("#bind").remove();
+
+				return userId;
+			};
+			var userConsumeRender = function(dataArray){
+				var time = null, money = null;
+				var html = '';
+				if (dataArray) {
+					for (var i = 0; i < dataArray.length; i++) {
+						time = dataArray[i].time;
+						money = dataArray[i].money;
+						html += 
+							"<li class=\"ui-border-t\">" +
+							"	<p><span class=\"date\">" + time + "</span></p>" +
+							"	<h4>消费 " + money + " 个课时</h4>" +
+							"</li>";
+					}
+				}
+				$("#consume").html(html);
+
+			};
+			/******************End Render Methods*******************************/
+
+			/******************Request Methods*******************************/
+			var userInfoRequest = function(){
+				$.ajax({
+					url: "http://weixin2.ngrok.natapp.cn/uweixin/money",
+					type: 'GET',
+					data: {openId: openid},
+					success: function(data){
+						if (parseInt(data, 10) < 0) {
+							alert("获取用户信息失败，请重新打开当前页面！");
+							return;
+						}
+
+						var userId = userInfoRender(JSON.parse(data));
+						userConsumeRequest(userId);
+					},
+					error: function(){
+						alert("网络故障，请检查您的网络");
+					}
+				});
+			};
+
+			var userConsumeRequest = function(userId){
+				$.ajax({
+					url: "http://weixin2.ngrok.natapp.cn/uweixin/consum",
+					type: 'GET',
+					data: {userId: userId},
+					success: function(data){
+						if (parseInt(data, 10) < 0) {
+							alert("获取消费信息失败，请重新打开当前页面！");
+							return;
+						}
+						userConsumeRender(JSON.parse(data).result);
+					},
+					error: function(){
+						alert("网络故障，请检查您的网络");
+					}
+				});				
+			};
+			/******************End Request Methods*******************************/
+
+
+			
+
+			var init = function(){
+				userInfoRequest();
+			};
+
+			init();
+		});
+	</script>
+</body>
+</html>
