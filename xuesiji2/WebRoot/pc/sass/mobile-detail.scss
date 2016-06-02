@@ -1,0 +1,45 @@
+$headerColor: #303641;
+body{
+	margin: 0;
+	padding: 0;
+	font-family: "Microsoft Yahei", "微软雅黑", "STXihei", sans-serif;
+	background-color: #e0e1e2;
+}
+header{
+	height: 50px;
+	position: relative;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: $headerColor;
+	color: #fff;
+	text-align: center;
+	line-height: 50px;
+	font-size: 18px;
+	#back{
+		position: absolute;
+		left: 1em;
+		font-size: 12px;
+	}
+}
+.container{
+	table{
+		border: 1px #eee solid;
+		width: 98%;
+		text-align: center;
+		margin: 10px auto;
+		border-collapse: collapse;
+		tr{
+			height: 38px;
+			background-color: #fff;
+		}
+		thead tr{
+			background-color: lighten($headerColor, 15);
+			height: 40px;
+			color: #fff;
+		}
+		tbody tr:nth-child(2n+1){
+			background-color: lighten(#18bc9c,50);
+		}
+	}
+}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>学思集辅导员身份绑定</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+</head>
+
+<body>
+    <div class="page">
+        <header class="bar bar-nav theme-dark">
+            <h1 class="title">辅导员绑定</h1>
+        </header>
+        <div class="content">
+            <div class="list-block">
+                <ul>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">姓名</div>
+                                <div class="item-input">
+                                    <input type="text" id="nick" name="nick" placeholder="Your Name">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">工号</div>
+                                <div class="item-input">
+                                    <input type="number" id="name" name="name" placeholder="Your User ID">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">密码</div>
+                                <div class="item-input">
+                                    <input type="password" id="psd" name="psd" placeholder="Your Password">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-gender"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">学院</div>
+                                <div class="item-input">
+                                    <select name="college" id="college">
+                                    <option value="1" >[01]材料科学与工程学院</option>
+                                    
+                                    <option value="2" >[02]环境与化学工程学院</option>
+                                    
+                                    <option value="3" >[03]航空制造工程学院</option>
+                                    
+                                    <option value="4" >[04]信息工程学院</option>
+                                    
+                                    <option value="5" >[05]外国语学院</option>
+                                    
+                                    <option value="6" >[06]飞行器工程学院</option>
+                                    
+                                    <option value="7" >[07]数学与信息科学学院</option>
+                                    
+                                    <option value="8" >[08]测试与光电工程学院</option>
+                                    
+                                    <option value="9" >[09]经济管理学院</option>
+                                    
+                                    <option value="10" >[10]体育学院</option>
+                                    
+                                    <option value="11" >[11]土木建筑学院</option>
+                                    
+                                    <option value="12" >[12]艺术与设计学院</option>
+                                    
+                                    <option value="13" >[13]马克思主义学院</option>
+                                    
+                                    <option value="14" >[14]文法学院</option>
+                                    
+                                    <option value="15" >[15]音乐学院</option>
+                                    
+                                    <option value="16" >[20]软件学院</option>
+                                    
+                                    <option value="17" >[21]海军学院</option>
+                                    
+                                    <option value="18" >[22]国际教育学院</option>                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="content-block">
+                    <p><a id="submit" class="button button-dark button-big">绑定</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+
+    <script>
+        $(function(){
+            var WeixinJSBridge = WeixinJSBridge ? WeixinJSBridge : {call: function(){}};
+            var getOpenId = function () {
+                var query = window.location.search;
+                    query = query.substr(1);
+                    query = query.split("&");
+                var o = {};
+                for (var i = 0; i < query.length; i++) {
+                    var key = query[i].split("=")[0];
+                    var value = query[i].split("=")[1];
+                    o[key] = value;
+                }
+
+                return o.openId;
+            };
+            var openId = getOpenId();
+
+            $("#submit").click(function(e){
+               e.preventDefault();
+               var nick = $.trim($("#nick").val()),
+                   name = $.trim($("#name").val()),
+                   psd  = $("#psd").val(),
+                   college = $.trim($("#college").val());
+
+                if (!nick || !name || !psd) {
+                    alert("有未填项！");
+                    return;
+                }
+
+                $.ajax({
+                    // NOTE: 辅导员绑定接口
+                    url: 'http://wsd.chxxi614.com/xuesiji/instruBind',
+                    type: 'POST',
+                    data: {
+                        nick: nick,
+                        name: name,
+                        psd : psd,
+                        college: college,
+                        openId: openId
+                    },
+                    success: function(d){
+                        if (parseInt(d) < 0) {
+                            alert("绑定失败，请检查输入是否有误！");
+                        } else {
+                            alert("绑定成功！");
+                            WeixinJSBridge.call('closeWindow');
+                        }
+                    },
+                    error: function(){
+                        alert("网络故障，请检查网络后重试！");
+                    }
+                });
+                
+
+            }); 
+        })
+    </script>
+    <!-- 姓名 -->
+    <!-- 工号 -->
+    <!-- 学院 -->
+    <!-- 密码 -->
+    <!-- openID -->
+
+    <!-- response success ? 200 : -1-->
+</body>
+
+</html>

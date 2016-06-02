@@ -1,0 +1,13 @@
+{
+	"browser" : true,
+	"devel"   : true,
+	"strict"  : false,
+	"globals" : {
+		"require": true,
+		"ActiveXObject": true,
+		"data": true,
+		"bind": true,
+		"generateInitailData": true,
+		"request": true
+	}
+}

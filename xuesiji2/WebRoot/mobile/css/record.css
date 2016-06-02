@@ -1,0 +1,64 @@
+.table-detail {
+  padding: 2em; }
+  .table-detail:after {
+    display: table;
+    clear: both;
+    zoom: 1;
+    content: ""; }
+  .table-detail table {
+    float: left;
+    margin-right: 2em;
+    margin-bottom: 4em; }
+  .table-detail .buttons-select button {
+    width: 120px;
+    height: 45px;
+    margin: 10px 2em;
+    border: none;
+    outline: 0;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    float: right; }
+  .table-detail .buttons-select {
+    margin-top: -10px;
+    display: inline-block;
+    float: right;
+    width: 50px; }
+    .table-detail .buttons-select #leave-view {
+      background-color: #3498db;
+      border: 1px solid #3498db; }
+      .table-detail .buttons-select #leave-view:hover {
+        background-color: #5faee3; }
+    .table-detail .buttons-select #class-view {
+      background-color: #303641;
+      border: 1px solid #303641; }
+      .table-detail .buttons-select #class-view:hover {
+        background-color: #464e5e; }
+    .table-detail .buttons-select #sign-view {
+      background-color: #18bc9c;
+      border: 1px solid #18bc9c; }
+      .table-detail .buttons-select #sign-view:hover {
+        background-color: #24e3be; }
+    .table-detail .buttons-select #disconnect-view {
+      background-color: #d91e18;
+      border: 1px solid #d91e18; }
+      .table-detail .buttons-select #disconnect-view:hover {
+        background-color: #e9403b; }
+  .table-detail .buttons-class {
+    vertical-align: middle;
+    margin-bottom: 10px; }
+    .table-detail .buttons-class button {
+      width: 55px;
+      height: 35px;
+      margin: 6px 3px;
+      text-align: center;
+      border-radius: 4px;
+      outline: 0;
+      border: none;
+      background-color: #303641;
+      color: #fff;
+      cursor: pointer; }
+    .table-detail .buttons-class button:hover {
+      background-color: #464e5e; }
+    .table-detail .buttons-class button.active {
+      background-color: #2ecc71; }

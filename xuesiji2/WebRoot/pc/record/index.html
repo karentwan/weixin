@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="谢家兴">
+	<title>南昌航空大学学思集学生信息管理系统</title>
+
+	<link rel="stylesheet" href="../css/iconfont.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/record.css">
+
+	<script src="../js/utility.js"></script>
+	<script>
+		var requestConfig = {
+			"url" : "http://wsd.chxxi614.com/xuesiji/querySign",
+			"method": "POST"
+		};
+	</script>
+	<script src="../js/data.js"></script>
+</head>
+<body>
+	<div class="aside">
+		<div class="brand">
+			<img src="../img/logo.png" alt="">
+			<span>学思集工作室出品</span>
+		</div>
+		<div class="menu-bar-collapse">
+			<ul class="nav" id="side-menu">
+				<li class="sidebar-user">
+					<img class="left" src="../img/user.png" alt="">
+					<div class="info left">
+						<span class="guide">欢迎</span> <br> 
+						<span id="userName">杜为老师</span> <br>
+						<span class="collage">信工学院</span>
+					</div>
+				</li>
+				<li>
+					<a href="../index.html">
+						<i class="iconfont icon-dashboard"></i>
+						信息总览
+					</a>
+				</li>
+				<li>
+					<a href="../classManage/">
+						<i class="iconfont icon-class"></i>
+						班级管理
+					</a>
+				</li>
+				<li>
+					<a href="#" class="active">
+						<i class="iconfont icon-record"></i>
+						考勤管理
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="iconfont icon-money"></i>奖学金管理
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="iconfont icon-prize"></i>
+						评优管理
+					</a>
+				</li>
+				<li class="sidebar-date">
+					<span>当前日期</span>
+					<span class="date">
+						<script>var time = (new Date().getFullYear()) +"-"+ ((new Date().getMonth()) + 1) +"-"+ (new Date().getDate());document.write(time)</script>
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="main-body left">
+		<div class="menu-bar-row">
+			<div class="brand">
+				<a href="#">南昌航空大学学生信息管理系统
+				</a>
+			</div>
+			<ul class="nav right" id="row-menu">
+				<li> <a href="#">邮件</a> </li>
+				<li> <a href="#">意见反馈</a> </li>
+			</ul>
+		</div>
+		<div class="main-content">
+			<!-- <div class="banner">
+				<h1>考勤管理</h1>
+				<span>汇总信息请点击左侧‘信息总览’</span>
+			</div> -->
+<!-- 			<div class="panel-list">
+				<div class="panel panel-normal">
+					<h3>
+						<i class="iconfont icon-class"></i>
+						今日签到人数
+					</h3>
+					<p>56</p>
+				</div>
+				<div class="panel panel-primary">
+					<h3>
+						<i class="iconfont icon-leave"></i>
+						今日请假人数
+					</h3>
+					<p>23</p>
+				</div>
+				<div class="panel panel-danger">
+					<h3>今日失联人数</h3>
+					<p>9</p>
+				</div>
+			</div> -->
+			<div class="table table-detail">
+				<div class="buttons-class" id="class-btns" style="display:none">
+					<h3>班级选择</h3>
+<!-- 					<button class="active">130443</button>
+					<button>130443</button>
+-->				</div>
+				<table id="table">
+					<thead>
+						<tr>
+							<th>班级</th>
+							<th>学号</th>
+							<th>姓名</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>总计</th>
+							<th>0</th>
+							<th>0</th>
+							<th>0</th>
+						</tr>
+					</tfoot>
+				</table>
+				<div class="buttons-select">
+					<button id="class-view">按班级查看</button>
+					<button data-status="signIn" id="sign-view">查看已签到</button>
+					<button data-status="leave" id="leave-view">查看已请假</button>
+					<button data-status="disconnect" id="disconnect-view">查看失联学生</button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+
+	<script>
+		// 默认渲染方式 显示统计汇总
+		var defaultRender = function(){
+			var user = data.userName;
+			var Y = new Date().getFullYear();
+			var m = new Date().getMonth() > 10 ? new Date().getMonth() : '0' + (new Date().getMonth());
+			var d = new Date().getDate();
+			var success = function(rep){
+				var json = JSON.parse(rep);
+				render(json);
+			};
+			request({
+				url: "http://wsd.chxxi614.com/xuesiji/count",
+				method: "POST",
+		//		data: {name: user, time: Y+'-'+m+'-'+d},
+				data: {name: "万海燕", time: Y+'-'+m+'-'+d},
+				callback: success
+			});
+		};
+		var render = function (rep) {
+			console.log(rep);
+			var table = document.getElementById("table");
+			// thead
+			table.getElementsByTagName("thead")[0].innerHTML= 
+					'<tr>' +
+						'<th>日期</th>' +
+						'<th>签到人数</th>' +
+						'<th>请假人数</th>' +
+						'<th>失联人数</th>' +
+					'</tr>';
+			// tbody
+			// TODO： 接收更多条数据，并实时记录总数
+			table.getElementsByTagName("tbody")[0].innerHTML= 
+					'<tr>' +
+						'<td>'+ rep.time +'</td>' +
+						'<td>'+ rep.signInNum +'</td>' +
+						'<td>'+ rep.leaveNum +'</td>' +
+						'<td>'+ rep.disconnectNum +'</td>' +
+					'</tr>';
+			// tfoot
+			// TODO：根据tbody渲染的数据进行修改
+			table.getElementsByTagName("tfoot")[0].innerHTML = 
+					'<tr>' +
+						'<th>总计</th>' +
+						'<th>'+ rep.signInNum +'</th>' +
+						'<th>'+ rep.leaveNum +'</th>' +
+						'<th>'+ rep.disconnectNum +'</th>' +
+					'</tr>';
+		};
+		var renderByClass = function(classid){
+			console.log(classid);
+			document.getElementById("class-btns").style.display = "block";
+			var students = data.students[classid];
+			var html = "";
+
+			var table = document.getElementById("table");
+
+			// thead 表头
+			table.getElementsByTagName("thead")[0].innerHTML = 
+				'<tr>' +
+				'	<th>学号</th>' +
+				'	<th>姓名</th>' +
+				'	<th>已签到</th>' +
+				'	<th>已请假</th>' +
+				'	<th>失联</th>' +
+				'	<th>备注</th>' +
+				'</tr>';
+			// tbody 主体内容
+			for (var i = 0, signNum=0, leaveNum=0, disconnectNum=0; i < students.length; i++) {
+				if (students[i].status == "signIn") signNum++;
+				if (students[i].status == "disconnect") disconnectNum++;
+				if (students[i].status == "leave") leaveNum++;
+				var signTpl = students[i].status == "signIn" ? '<td> <i class="iconfont icon-check"></i> </td>' : '<td> </td>';
+				var disconnectTpl = students[i].status == "disconnect" ? '<td> <i class="iconfont icon-danger"></i> </td>' : '<td> </td>';
+				var leaveTpl = students[i].status == "leave" ? '<td> <i class="iconfont icon-warning"></i> </td>' : '<td> </td>';
+				var reason = students[i].reason ? '<td> '+ students[i].reason +' </td>' : '<td> </td>'; 
+				html += 
+					'<tr>' +
+						'<td> '+ students[i].account +' </td>' +
+						'<td> '+ students[i].name +' </td>' +
+						signTpl + 
+						leaveTpl + 
+						disconnectTpl +
+						reason +
+					'</tr>';
+			}
+			table.getElementsByTagName("tbody")[0].innerHTML = html;
+
+			// tfoot 数据汇总
+			// console.log(disconnectNum);
+			table.getElementsByTagName("tfoot")[0].innerHTML = 
+									'<tr>' +
+										'<th>总计</th>' +
+										'<th>'+ students.length +'</th>' +
+										'<th>'+ signNum +'</th>' +
+										'<th>'+ leaveNum +'</th>' +
+										'<th>'+ disconnectNum +'</th>' +
+										'<th> </th>' +
+									'</tr>';
+		};
+		var renderByStatus = function(status){
+			console.log(status);
+			// 1. table 上标注 签到 、请假、 失联
+			var statusArr = {"signIn": "已签到学生", "leave": "已请假学生", "disconnect": "失联学生"};
+			var o = data[status];
+			var el = document.createElement("h3");
+			el.innerHTML = statusArr[status];
+			var container = document.getElementsByClassName("table")[0];
+			var table = document.getElementById("table");
+			container.insertBefore(el, table);
+			
+
+			// 2. 填充表格 班级 学号 姓名
+			var html = "";
+			var l = 0;
+			// thead
+			table.getElementsByTagName("thead")[0].innerHTML = 
+				'<tr>' +
+					'<th>班级</th>' +
+					'<th>学号</th>' +
+					'<th>姓名</th>' +
+					'<th>备注</th>' +
+				'</tr>';
+			// tbody
+			for (var item in o) {
+				// item : classid
+				if (o.hasOwnProperty(item)) {
+					for (var i = 0; i < o[item].length; i++) {
+						l++;
+						html += 
+							'<tr>' +
+								'<th>'+ item +'</th>' +
+								'<th>'+ o[item][i].account +'</th>' +
+								'<th>'+ o[item][i].name +'</th>';
+						if(o[item][i].reason) html += '<th>'+ o[item][i].reason +'</th>' ;
+						else html += '<th></th>';
+						html += '</tr>';
+						
+					}
+				}
+			}
+			table.getElementsByTagName("tbody")[0].innerHTML = html;
+
+			// tfoot
+			table.getElementsByTagName("tfoot")[0].innerHTML = 
+				'<tr>' +
+					'<th>总计</th>' +
+					'<th>' + l + '</th>' +
+					'<th></th>' +
+					'<th></th>' +
+				'</tr>';
+		};
+
+		/**
+		 * 以对象形式返回query值
+		 * @return {Object} {"class":130443} or {"status": "disconnect" | "leave" | "signIn"}
+		 */
+		var parseQuery = function(){
+			var search = window.location.search;
+			search = search.substr(1,search.length);
+			var queryArr = search.split("&");
+			var o = {};
+			for (var i = 0; i < queryArr.length; i++) {
+				var prop = queryArr[i].split("=")[0];
+				var value = queryArr[i].split("=")[1];
+				o[prop] = value;
+			}
+			queryArr = null;
+			return o;
+		};
+
+		// 事件绑定，不同按钮点击时，
+		// query换成对应值，并手动触发renderInit，重新渲染
+		var btnClickBind = function(){
+			// btns
+			var classBtn = document.getElementById("class-view");
+			var disconnectBtn = document.getElementById("disconnect-view");
+			var leaveBtn = document.getElementById("leave-view");
+			var signBtn = document.getElementById("sign-view");
+			var classList = document.getElementById("class-btns");
+
+			// 点击显示class list BTN
+			bind(classBtn, 'click', function() {
+				var btns = document.getElementById("class-btns");
+				if(btns.style.display === "block"){
+					btns.style.display = "none";
+				} else {
+					btns.style.display = "block";
+				}
+			});
+
+			// 点击按班级数据渲染
+			bind(classList, 'click', function(event) {
+				var klass = event.target.innerHTML;
+				if (parseInt(klass, 10)) {
+					// renderByClass(klass);
+					var query = "?class="+klass; 
+					window.location.search = query;
+				}
+			});
+
+			var changeQuery = function() {
+				var query = "?status=" + this.getAttribute("data-status");
+				window.location.search = query;
+			};
+
+			bind(signBtn, 'click', changeQuery);
+			bind(leaveBtn, 'click', changeQuery);
+			bind(disconnectBtn, 'click', changeQuery);
+		};
+
+		/**
+		 * 根据query值确定渲染方式
+		 * @return {null} 
+		 */
+		var renderInit = function(){
+			var query = parseQuery();
+			if (query.class) {
+				renderByClass(query.class);
+			} else if (query.status) {
+				renderByStatus(query.status);
+			} else {
+				defaultRender();
+			}
+		};
+		/**
+		 * 渲染班级数据列表 
+		 */
+		var classRender = function () {
+			if (!data.class) {
+				dataInit();
+			}
+			var klass = data.class;
+			var btns = document.getElementById("class-btns");
+			for (var i = 0; i < klass.length; i++) {
+				var el = document.createElement("button");
+				el.innerHTML = klass[i];
+				btns.appendChild(el);
+			}
+		}
+		// 首次加载初始化
+		var init = function(){
+			classRender();
+			renderInit();
+			btnClickBind();
+		};
+//		window.onload = init;
+		window.onload = dataInit(init);
+	</script>
+</body>
+</html>

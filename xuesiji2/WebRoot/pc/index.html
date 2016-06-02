@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="谢家兴">
+	<title>南昌航空大学学思集学生信息管理系统</title>
+
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link rel="stylesheet" href="css/style.css">
+
+	<script src="js/utility.js"></script>
+	<script>
+		var requestConfig = {
+			"url" : "http://wsd.chxxi614.com/xuesiji/querySign",
+			"method": "POST"
+		};
+	</script>
+	<script src="js/data.js"></script>
+	<style>
+		.icon-danger:before{color: #fff;}
+	</style>
+</head>
+<body>
+	<div class="aside">
+		<div class="brand">
+			<img src="img/logo.png" alt="">
+			<span>学思集工作室出品</span>
+		</div>
+		<div class="menu-bar-collapse">
+			<ul class="nav" id="side-menu">
+				<li class="sidebar-user">
+					<img class="left" src="img/user.png" alt="">
+					<div class="info left">
+						<span class="guide">欢迎</span> <br> 
+						<span id="userName">杜为老师</span> <br>
+						<span class="collage">信工学院</span>
+					</div>
+				</li>
+				<li>
+					<a href="#" class="active">
+						<i class="iconfont icon-dashboard"></i>
+						总览
+					</a>
+				</li>
+				<li>
+					<a href="classManage/">
+						<i class="iconfont icon-class"></i>
+						班级管理
+					</a>
+				</li>
+				<li>
+					<a href="./record/">
+						<i class="iconfont icon-record"></i>
+						考勤管理
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="iconfont icon-money"></i>奖学金管理
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="iconfont icon-prize"></i>
+						评优管理
+					</a>
+				</li>
+				<li class="sidebar-date">
+					<span>当前日期</span>
+					<span class="date">
+						<script>var time = (new Date().getFullYear()) +"-"+ ((new Date().getMonth()) + 1) +"-"+ (new Date().getDate());document.write(time)</script>
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="main-body left">
+		<div class="menu-bar-row">
+			<div class="brand">
+				<a href="#">南昌航空大学学生信息管理系统
+				</a>
+			</div>
+			<ul class="nav right" id="row-menu">
+				<li> <a href="#">邮件</a> </li>
+				<li> <a href="#">意见反馈</a> </li>
+			</ul>
+		</div>
+		<div class="main-content">
+			<!-- <div class="banner">
+				<h1>考勤概览</h1>
+				<span>更多详细信息点击左侧‘考勤管理’</span>
+			</div> -->
+			<div class="panel-list">
+				<a class="panel panel-normal" id="summary-signIn" href="record/?status=signIn"> 
+					<h3>
+						<i class="iconfont icon-class"></i>
+						今日签到人数
+					</h3>
+					<p></p>
+				</a>
+				<a class="panel panel-primary" id="summary-leave" href="record/?status=leave">
+					<h3>
+						<i class="iconfont icon-leave"></i>
+						今日请假人数
+					</h3>
+					<p></p>
+				</a>
+				<a class="panel panel-danger" id="summary-disconnect" href="record/?status=disconnect">
+					<h3>
+						<i class="iconfont icon-danger"></i>
+						今日失联人数
+					</h3>
+					<p></p>
+				</a>
+			</div>
+			<div class="table table-summary" style="padding-bottom:4em;">
+				<h3>历史数据</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>时间</th>
+							<th>签到人数</th>
+							<th>请假人数</th>
+							<th>失联人数</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>总计</th>
+							<th>0</th>
+							<th>0</th>
+							<th>0</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		// 数据填充
+		var render = function(){
+
+			var sign = document.getElementById("summary-signIn").getElementsByTagName("p")[0];
+			var disconnect = document.getElementById("summary-disconnect").getElementsByTagName("p")[0];
+			var leave = document.getElementById("summary-leave").getElementsByTagName("p")[0];
+
+			if (!data.summary) dataInit();
+
+			sign.innerHTML = data.summary.signIn;
+			disconnect.innerHTML = data.summary.disconnect;
+			leave.innerHTML = data.summary.leave;
+		};
+
+//		window.onload = render;
+		window.onload = dataInit(render);
+	</script>
+
+</body>
+</html>

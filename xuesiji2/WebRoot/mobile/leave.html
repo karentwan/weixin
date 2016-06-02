@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>学生请假申请表</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+</head>
+
+<body>
+    <div class="page">
+        <header class="bar bar-nav theme-dark">
+            <h1 class="title">学生请假申请表</h1>
+        </header>
+        <div class="content">
+            <div class="list-block">
+                <a href="###" onclick="WeixinJSBridge.call('closeWindow');">CLOSE </a>
+
+                <ul>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">姓名</div>
+                                <div class="item-input">
+                                    <input type="text" id="name" name="name" placeholder="请输入姓名">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">学号</div>
+                                <div class="item-input">
+                                    <input type="number" id="account" name="account" placeholder="请输入学号">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-calendar"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">起始时间</div>
+                                <div class="item-input">
+                                    <input type="text" name="startTime" id="startTime" class="picker-date" placeholder="点击选择日期">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-calendar"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">结束时间</div>
+                                <div class="item-input">
+                                    <input type="text" name="endTime" id="endTime" class="picker-date" placeholder="点击选择日期">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="align-top">
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-comment"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">请假理由</div>
+                                <div class="item-input">
+                                    <textarea id="reason"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="content-block">
+                    <p><a id="submit" class="button button-dark button-big">提交</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+    <script>
+        $(function(){
+            var WeixinJSBridge = WeixinJSBridge ? WeixinJSBridge : {call: function(){}};
+            var Y = new Date().getFullYear();
+            var M = new Date().getMonth() + 1;
+            M = M > 9 ? M : "0" + M;
+            var D = new Date().getDate();
+            var picker = {
+                toolbarTemplate: '<header class="bar bar-nav">\
+                  <button class="button button-link pull-right close-picker">确定</button>\
+                  <h1 class="title">请选择请假时间</h1>\
+                  </header>',
+                cols: [{
+                    textAlign: 'center',
+                    values: ['2016', '2017', '2018']
+                        //如果你希望显示文案和实际值不同，可以在这里加一个displayValues: [.....]
+                }, {
+                    textAlign: 'center',
+                    values: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+                }, {
+                    textAlign: 'center',
+                    values: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10',
+                        '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+                        '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
+                        '31'
+                    ]
+                }],
+                value: [Y, M, D],
+                inputReadOnly: true,
+                formatValue: function(picker, value, displayValue) {
+                    var result = value;
+                    result = result.join("-");
+                    return result;
+                }
+            };
+            $(".picker-date").picker(picker);
+
+            $("#submit").click(function(e){
+                e.preventDefault();
+                console.log("submit");
+                WeixinJSBridge.call('closeWindow');
+                var name  = $.trim($("#name").val()),
+                account   = $.trim($("#account").val()),
+                startTime = $("#startTime").val(),
+                endTime   = $("#endTime").val(),
+                reason     = $.trim($('#reason').val());
+
+                if (!name || !account || !startTime || !endTime) {
+                    alert("请填写完整！");
+                    return;
+                }
+                $.ajax({
+                    // NOTE: 请假接口
+                    url: 'http://wsd.chxxi614.com/xuesiji/leave',
+                    type: 'POST',
+                    data: {
+                        name: name, 
+                        account: account,
+                        startTime: startTime,
+                        endTime: endTime,
+                        reason: reason
+                    },
+                    success: function(data){
+                        if (parseInt(data) < 0) {
+                            alert("请假成功！");
+                        } else {
+                            alert("请假失败！");
+                            WeixinJSBridge.call('closeWindow');
+                        }
+                    },
+                    error:function(){
+                            alert("网络堵车！");
+                    }
+                })
+
+            });
+
+            $.init();
+        });
+    </script>
+
+
+    <!-- name -->
+    <!-- account -->
+    <!-- startTime -->
+    <!-- endTime -->
+    <!-- reason -->
+    <!-- response success ? 200 : -1-->
+
+</body>
+
+</html>

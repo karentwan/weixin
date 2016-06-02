@@ -1,0 +1,40 @@
+#addClass {
+  padding: 1em 2em; }
+  #addClass button {
+    width: 85px;
+    height: 35px;
+    color: #fff;
+    cursor: pointer;
+    background-color: #18bc9c;
+    border: 1px #18bc9c solid;
+    border-radius: 4px; }
+    #addClass button:hover {
+      background-color: #24e3be; }
+  #addClass #class-select-list {
+    padding: 0 1em;
+    border-bottom: 1px #eee solid; }
+
+#classes, #class-select-list {
+  padding-left: 2em; }
+  #classes .button, #class-select-list .button {
+    display: inline-block;
+    margin: 0 8px; }
+    #classes .button button, #class-select-list .button button {
+      cursor: pointer;
+      width: 65px;
+      height: 35px;
+      margin-bottom: 10px;
+      outline: 0;
+      background-color: #c6c8c9;
+      border-radius: 5px 0 0 5px;
+      border: 1px #c6c8c9 solid;
+      color: rgba(0, 0, 0, 0.78);
+      font-size: 16px;
+      text-align: center; }
+    #classes .button .delete, #classes .button .add, #class-select-list .button .delete, #class-select-list .button .add {
+      border-radius: 0 5px 5px 0;
+      width: 30px;
+      padding: 0 10px;
+      opacity: .6; }
+      #classes .button .delete:hover, #classes .button .add:hover, #class-select-list .button .delete:hover, #class-select-list .button .add:hover {
+        opacity: 1; }

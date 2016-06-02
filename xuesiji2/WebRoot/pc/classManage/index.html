@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="谢家兴">
+	<title>南昌航空大学学思集学生信息管理系统</title>
+
+	<link rel="stylesheet" href="../css/iconfont.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/class.css">
+
+	<script src="../js/utility.js"></script>
+	<script>
+		requestConfig = {
+			"url" : "http://wsd.chxxi614.com/xuesiji/querySign",
+			"method": "POST"
+			// "data": {name: "王艺", time: "2016-05-23"}
+		};
+	</script>
+	<script src="../js/data.js"></script>
+</head>
+<body>
+	<div class="aside">
+		<!-- <div class="brand">
+			<img src="../img/logo.png" alt="">
+			<span>学思集工作室出品</span>
+		</div> -->
+		<div class="menu-bar-collapse">
+			<ul class="nav" id="side-menu">
+				<li class="sidebar-user">
+					<img class="left" src="../img/user.png" alt="">
+					<div class="info left">
+						<span class="guide">欢迎</span> <br> 
+						<span id="userName">杜为老师</span> <br>
+						<span class="collage">信工学院</span>
+					</div>
+				</li>
+				<li>
+					<a href="../index.html">
+						<i class="iconfont icon-dashboard"></i>
+						信息总览
+					</a>
+				</li>
+				<li>
+					<a href="../classManage/" class="active">
+						<i class="iconfont icon-class"></i>
+						班级管理
+					</a>
+				</li>
+				<li>
+					<a href="../record/" >
+						<i class="iconfont icon-record"></i>
+						考勤管理
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="iconfont icon-money"></i>奖学金管理
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<i class="iconfont icon-prize"></i>
+						评优管理
+					</a>
+				</li>
+				<li class="sidebar-date">
+					<span>当前日期</span>
+					<span class="date">
+						<script>var time = (new Date().getFullYear()) +"-"+ ((new Date().getMonth()) + 1) +"-"+ (new Date().getDate());document.write(time)</script>
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="main-body left">
+		<div class="menu-bar-row">
+			<div class="brand">
+				<a href="#">南昌航空大学学生信息管理系统
+				</a>
+			</div>
+			<ul class="nav right" id="row-menu">
+				<li> <a href="#">邮件</a> </li>
+				<li> <a href="#">意见反馈</a> </li>
+			</ul>
+		</div>
+		<div class="main-content">
+		    <div class="banner">
+				<h1>班级管理</h1>
+				<span>添加或修改管理的班级</span>
+			</div> 
+			<div id="addClass">
+				<button>添加班级</button>
+				<div id="class-select-list">
+<!-- 					<div class="button">
+						<button>111111</button><button class="add">+</button>
+					</div>
+ -->			
+ 				</div>
+			</div>
+			<div id="classes">
+				<h3>当前管理班级</h3>
+				
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		var addClassCache = [];
+		// 渲染班级列表
+		var renderBtn = function(){
+			var klass = data.class;
+			var outer = document.getElementById("classes");
+			var html  = "";
+			for (var i = 0; i < klass.length; i++) {
+				html += 
+				'<div class="button">' +
+					'<button>'+ klass[i] +'</button><button class="delete">X</button>' +
+				'</div>';
+			}
+			outer.innerHTML = '<h3>当前管理班级</h3>' + html;
+		};
+		var renderUsableBtn = function(rep){
+			var json = JSON.parse(rep);
+			var klass = json.class;
+			var outer = document.getElementById("class-select-list");
+			var html  = "";
+			for (var i = 0; i < klass.length; i++) {
+				html += 
+				'<div class="button">' +
+					'<button>'+ klass[i] +'</button><button class="add">+</button>' +
+				'</div>';
+			}
+			outer.innerHTML = '<h3>当前可选班级</h3>' + html + '<button id="submit" style="display: block">确认添加</button>';
+			bindAddEvent();
+		};
+		var btnEventBind = function(){
+			// 点击班级按钮删除改班级
+			var del = document.getElementsByClassName('delete');
+			for (var i = 0; i < del.length; i++) {
+				bind(del[i], 'click', delHandle);
+			}
+
+			// 添加班级
+			var add = document.getElementById("addClass").getElementsByTagName("button")[0];
+			bind(add, "click", function(){
+				var list = document.getElementById("class-select-list");
+				list.innerHTML = "<h5>正在从服务器读取数据</h5>";
+				request({
+					// NOTE: in debug
+					 url: "http://wsd.chxxi614.com/xuesiji/queryConfidomClass",
+				//	url: "../test.php",
+					method: "POST",
+					data: "",
+					callback: function(rep){
+						renderUsableBtn(rep);
+					}
+				});
+			});
+		};
+
+		var bindAddEvent = function(){
+			var add = document.getElementById("class-select-list").getElementsByClassName("add");
+			for (var i = 0; i < add.length; i++) {
+				bind(add[i], 'click', addHandle);
+			}
+
+			var submit = document.getElementById("submit");
+			bind(submit, 'click', function(){
+				var list = document.getElementById("class-select-list").getElementsByClassName("button");
+				for (var j = 0; j < list.length; j++) {
+					if (list[j].getAttribute("data-choose") === "true") {
+						addClassCache.push(list[j].getElementsByTagName('button')[0].innerHTML);
+					}
+				}
+				alert(addClassCache);
+				request({
+					// 添加班级接口
+					url: 'http://wsd.chxxi614.com/xuesiji/addClass',
+					method: "POST",
+					json: true,
+					data: {"class": addClassCache, "name": data.username},
+				//	data: {"class": addClassCache, "name": "万海燕"},
+					callback: function(){
+						alert("添加成功");
+						// do refresh
+						window.location.search = "?";
+					}
+				})
+			});
+		};
+
+		var delHandle = function(event) {
+				console.log("delete class " + event.target.parentNode.firstChild.innerHTML);
+				var classid = event.target.parentNode.firstChild.innerHTML;
+				// NOTE: delete 接口
+				request({
+					url: "http://wsd.chxxi614.com/xuesiji/delClass",
+					method: "POST",
+					data: {"class": [classid],"name": data.username},
+				//	data: {"class": [classid],"name": "万海燕"},
+					json: true,
+					callback: (function(){
+						var el = event.target;
+						var id = classid;
+						return function () {
+							alert("班级 " + id + " 已从管理列表中移除！");
+							el.parentNode.remove();
+						};
+					}())
+				});
+		};
+
+		var addHandle = function(event) {
+			var isChoose = event.target.parentNode.getAttribute("data-choose");
+			if (isChoose === "true") {
+				event.target.innerHTML = '+';
+				event.target.parentNode.setAttribute("data-choose", "false");					
+			} else {
+				event.target.innerHTML = '&radic;';
+				event.target.parentNode.setAttribute("data-choose", "true");
+			}
+		};
+		var init = function(){
+			renderBtn();
+			btnEventBind();
+		};
+		//window.onload = init;
+		window.onload = dataInit(init);
+	</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+table {
+  width: 70%;
+  border: 1px #eee solid;
+  box-shadow: #000 -5px 3px 8px -5px;
+  border-collapse: collapse; }
+  table thead th {
+    border-bottom: 1px #18bc9c solid; }
+  table tfoot th {
+    border-top: 1px #18bc9c solid; }
+  table tr {
+    height: 40px;
+    text-align: center; }
+  table tbody tr:hover {
+    background: #18bc9c; }
+  table tbody tr:nth-child(2n+1) {
+    background-color: #effdfa; }

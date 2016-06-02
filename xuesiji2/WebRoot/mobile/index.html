@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1,width=device-width, maximum-scale=1, user-scalable=no">
+	<title>学思集学生信息管理系统</title>
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link rel="stylesheet" href="css/mobile.css">
+
+	<script src="js/utility.js"></script>
+	<script>
+		var requestConfig = {
+			"url" : "http://wsd.chxxi614.com/xuesiji/querySign",
+			"method": "POST"
+		};
+	</script>
+	<script src="js/data.js"></script>
+</head>
+<body>
+	<header>
+		当日考勤汇总
+	</header>
+	<div class="container">
+		<!-- <h2>点击查看详情</h2> -->
+		<div class="panels">
+			<a href="./detail/?status=signIn" class="panel panel-primary">
+				<h3>
+					<i class="iconfont icon-class"></i>
+					今日签到人数
+				</h3>
+				<p></p>
+			</a>
+			<a href="./detail/?status=leave" class="panel panel-warning">
+				<h3>
+					<i class="iconfont icon-leave"></i>
+					今日请假人数
+				</h3>
+				<p></p>
+			</a>
+			<a href="./detail/?status=disconnect" class="panel panel-danger">
+				<h3>
+					<i class="iconfont icon-danger"></i>
+					今日失联人数
+				</h3>
+				<p></p>
+			</a>
+		</div>
+		<!-- <div class="footer">
+			<img src="../img/footer.jpg" alt="">
+		</div> -->
+	</div>
+</body>
+</html>

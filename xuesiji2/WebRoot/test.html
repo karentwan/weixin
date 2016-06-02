@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<title>test</title>
+	<head>
+	<body>
+		
+	<input type="button" value="°´Å¥" onClick="send()"/>
+	<input type="submit" value="submit">
+		<script >
+			var send = function(){
+				alert("test start....");
+				alert("" || "POST");
+				var xhr = new XMLHttpRequest();
+				var url = "http://weixin2.ngrok.natapp.cn/weixin2.0/addClass";
+				xhr.open("POST",url,true);
+				var param = {
+					"class":[
+						"140431", "150451", "150452", "130443", "140423"
+					],
+					"name":"Íòº£Ñà"
+				};
+				xhr.send(JSON.stringify(param));
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState == 4){
+						if ((xhr.status >= 200 && xhr.status <= 300) || xhr.status == 304) {
+							// console.log(xhr.responseText);
+							if(xhr.responseText == "200"){
+								// appointement success render
+								alert("Ìí¼Ó°à¼¶³É¹¦£¡");
+							} else {
+								// has appointmented render
+								alert("Ìí¼ÓÊ§°Ü");
+							}
+						} else {
+							// net err
+							alert("ÍøÂç³ö´í£¬ÇëÖØÊÔ£¡");
+						}
+					}
+				};
+		};
+			
+			
+			
+	
+			
+		</script>
+
+	</body>
+</html>

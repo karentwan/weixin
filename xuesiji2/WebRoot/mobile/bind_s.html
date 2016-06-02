@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>学思集学生身份绑定</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+</head>
+
+<body>
+    <div class="page">
+        <header class="bar bar-nav">
+            <h1 class="title">学生绑定</h1>
+        </header>
+        <div class="content">
+            <div class="list-block">
+                <ul>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">姓名</div>
+                                <div class="item-input">
+                                    <input type="text" id="name" name="name" placeholder="Your Name">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">学号</div>
+                                <div class="item-input">
+                                    <input type="number" id="account" name="account" placeholder="Your Account">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">班级</div>
+                                <div class="item-input">
+                                    <input type="number" id="class" name="class" placeholder="Your Class ID">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                
+                </ul>
+
+                <div class="content-block">
+                    <p><a id="submit" class="button button-dark button-big">绑定</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+    <script>
+        $(function(){
+            var WeixinJSBridge = WeixinJSBridge ? WeixinJSBridge : {call: function(){}};
+            var getOpenId = function () {
+                var query = window.location.search;
+                    query = query.substr(1);
+                    query = query.split("&");
+                var o = {};
+                for (var i = 0; i < query.length; i++) {
+                    var key = query[i].split("=")[0];
+                    var value = query[i].split("=")[1];
+                    o[key] = value;
+                }
+
+                return o.openId;
+            };
+            var openId = getOpenId();
+
+            $("#submit").click(function(e){
+               e.preventDefault();
+               var 
+                   name = $.trim($("#name").val()),
+                   account  = $.trim($("#account").val()),
+                   klass = $.trim($("#class").val());
+
+                if (!account || !name || !klass) {
+                    alert("有未填项！");
+                    return;
+                }
+
+                $.ajax({
+                    // NOTE: 学生绑定接口
+                    url: 'http://wsd.chxxi614.com/xuesiji/bind',
+                    type: 'POST',
+                    data: {
+                        name: name,
+                        class: klass,
+                        account: account,
+                        openId: openId
+                    },
+                    success: function(d){
+                        if (parseInt(d) < 0) {
+                            alert("绑定失败，请检查输入是否有误！");
+                        } else {
+                            alert("绑定成功！");
+                            WeixinJSBridge.call('closeWindow');
+                        }
+                    },
+                    error: function(){
+                        alert("网络故障，请检查网络后重试！");
+                    }
+                });
+            }); 
+        });
+    </script>
+    <!-- 姓名 -->
+    <!-- 工号 -->
+    <!-- 学院 -->
+    <!-- 密码 -->
+    <!-- openID -->
+
+    <!-- response success ? 200 : -1-->
+
+</body>
+
+</html>

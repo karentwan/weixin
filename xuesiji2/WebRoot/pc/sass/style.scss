@@ -1,0 +1,212 @@
+$menuColor: #303641;
+$active: #18bc9c;
+$normal: #3498db;
+$primary: #2ecc71;
+$danger: #f22613;
+
+@import "table";
+html{
+	width: 100%;
+	height: 100%;
+}
+body, ul, h1, h2, p{
+	margin: 0;
+	padding: 0;
+}
+a{
+	color: #fff;
+	text-decoration: none;
+}
+body{
+	font-family: "Microsoft Yahei", "微软雅黑", "STXihei", sans-serif; 
+	height: 100%;
+}
+ul li{list-style: none;}
+.left{float: left;}
+.right{float: right}
+/* aside 部分 */
+.aside{
+	z-index: 100;
+	width: 250px;
+	position: fixed;
+	min-height: 100%;
+	color: #fff;
+	background-color: $menuColor;
+	/* 顶层标志 */
+	.brand{
+		padding: 0 20px;
+		font-size: 20px;
+		img{
+			height: 65px;
+			width: 45px;
+			vertical-align: middle;
+		}
+	}
+	/* 用户info */
+	.menu-bar-collapse .nav{
+		width: 100%;
+		.sidebar-user{
+			height: 80px;
+			padding: 8px;
+			background-color: lighten($menuColor, 10);
+			img{
+				width: 70px;
+				height: 70px;
+				margin: 5px 10px;
+				border-radius: 50%;
+				vertical-align: middle;
+			}
+			.info{
+				color: #fff;
+				margin: 5px 10px;
+				#userName {
+					font-weight: bold;
+					font-size: 22px;
+					line-height: 150%;
+				}
+				.collage{
+					background-color: $active;
+					padding: 5px;
+					border-radius: 5px;
+				}
+			}
+		}
+		.sidebar-date{
+			border-top: 1px #fff solid;
+			margin-top: 2em;
+			padding-left: 10px;
+			padding-top: 10px;
+			line-height: 120%;
+			.date{
+				display: block;
+				width: 160px;
+				height: 80px;
+				// background-color: blue;
+				margin: 0 auto;
+				font-size: 28px;
+				line-height: 80px;
+			}
+		}
+		li{
+			a{
+				display: block;
+				height: 45px;
+				width: 100%;
+				padding: 5px 0;
+				margin: 0 -10px 0 10px;
+				font-size: 18px;
+				line-height: 55px;
+				-webkit-transition: background ease-in 0.2s;
+				-o-transition: background ease-in 0.2s;
+				transition: background ease-in 0.2s;
+				i{
+					vertical-align: middle;
+					margin: 0 15px;
+				}
+				&:hover,&.active{
+					background-color: $active;
+				}
+			}
+		}
+	}
+}
+.main-body *{
+	// box-sizing: border-box;
+}
+.main-body .menu-bar-row,
+.main-body .main-content{
+	// padding-left: 250px;
+}
+.main-body{
+	width: 100%;
+	height: 100%;
+	padding-left: 250px;
+	box-sizing: border-box;
+	.menu-bar-row{
+		color: #fff;
+		width: 100%;
+		height: 65px;
+		background-color: $active;
+		line-height: 65px;
+		.brand{
+			display: inline;
+			line-height: 65px;
+			font-size: 20px;
+			a{
+				padding: 0 20px;
+				display: inline-block;
+				height: 65px;
+				background-color: lighten($menuColor, 8);
+			}			
+		}
+		ul{
+			display: inline;
+			li{
+				float: left;
+				a{
+					margin: 0 10px;
+					&:hover{
+						color: $menuColor;
+					}
+				}
+			}
+		}
+	}
+	.main-content{
+		height: 100%;
+		width: 100%;
+		background-color: #fff;
+
+		.banner{
+			color: #fff;
+			height: 240px;
+			background: url(../img/banner2.jpg) center -80px no-repeat;
+			padding: 20px;
+		}
+		.panel-list{
+			display: block;
+			width: 100%;
+			&:after{
+				display: table;
+				content: "";
+				clear: both;
+				zoom: 1;
+			}
+		}
+		.panel{
+			width: 200px;
+			height: 120px;
+			float: left;
+			color: #fff;
+			background-color: $menuColor;
+			margin: 30px 25px;
+			cursor: pointer;
+			border-radius: 5px;
+			.iconfont{
+				font-size: 32px;
+				vertical-align: middle;
+				margin-left: 10px;
+			}
+			p{
+				text-align: center;
+				font-size: 33px;
+			}
+		}
+		.panel-normal{
+			background-color: $normal;
+			&:hover{background-color: lighten($normal, 10);}
+		}
+		.panel-primary{
+			background-color: $primary;
+			&:hover{background-color: lighten($primary, 10);}
+		}
+		.panel-danger{
+			background-color: $danger;
+			&:hover{background-color: lighten($danger, 10);}
+		}
+
+		.table-summary{
+			margin: 30px;
+		}
+	}
+}
