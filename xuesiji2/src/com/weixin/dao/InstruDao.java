@@ -4,18 +4,25 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import net.sf.json.JSONObject;
+
 import com.weixin.exception.DuplicateBindException;
 import com.weixin.exception.MatchFiledException;
 import com.weixin.exception.NameNotFoundException;
+import com.weixin.pojo.HistoryItem;
+import com.weixin.pojo.HistoryResult;
 import com.weixin.pojo.Instru;
 import com.weixin.pojo.InstruInfo;
 import com.weixin.pojo.Leave;
 import com.weixin.pojo.Sign;
+import com.weixin.pojo.TempItem;
 import com.weixin.util.Db;
 import com.weixin.util.JSONUtil;
 
@@ -246,8 +253,6 @@ public class InstruDao {
 System.out.println("dao code :" + code);
 		return code;
 	}
-	
-	
 	
 	/**
 	 * 否则根据辅导员的姓名查询签到的学生
@@ -668,5 +673,168 @@ System.out.println("signIn sql:" + sql);
 		return i;
 	}
 	
+	/**
+	 * 查询历史记录
+	 * @param date 要查的天数
+	 */
+	public HistoryResult historyQuery(String name, int date) {
+		Connection connection = Db.getConnection();
+		Statement stmt = null;
+		//ResultSet引用
+		ResultSet rs = null;
+		ResultSet rs1 = null;
+		ResultSet rs3 = null;
+		String signSql = "select count(account), time from tb_sign_in where "
+				+ "instructor_name = '" + name + "' group by "
+						+ "time order by time desc limit " + date;
+		String sql = "select count(account) from tb_student as "
+				+ "t left join tb_class as c on t.class_id = c.id left join "
+				+ "tb_instru as i on c.instructor_id = i.id where i.name='" + name + "'";
+		List<String> today = getDate(1);
+		String leaveSql = "select count(account) from tb_leave where instructor_name='"
+				+ ""+ name +"' and startTime <= '"+today.get(0) +"' and endTime >= '"+today.get(0)+"'";
+		int count = 0;   //辅导员名下的所有学生
+		List<TempItem> lists = new ArrayList<TempItem>();
+		List<TempItem> disList = new ArrayList<TempItem>();
+		TempItem temp = new TempItem();
+		HistoryResult result = new HistoryResult();
+		List<HistoryItem> list = new ArrayList<HistoryItem>();
+		try {
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery(signSql);
+			while( rs.next() ) {
+				TempItem ti = new TempItem();
+				ti.setType("signInCount");
+				ti.setCount(rs.getInt(1));
+				ti.setTime(rs.getString(2));
+				lists.add(ti);
+			}
+			rs1 = stmt.executeQuery(sql);
+			if( rs1.next() ) {
+				count = rs1.getInt(1);
+			}
+			//计算未请假的人数
+			for(TempItem t : lists) {
+				TempItem ti = new TempItem();
+				ti.setType("disconnectCount");
+				ti.setCount(count - t.getCount());
+				ti.setTime(t.getTime());
+				disList.add(ti);
+			} 
+			rs3 = stmt.executeQuery(leaveSql);
+			if(rs3.next()) {
+				temp.setType("leaveCount");
+				temp.setCount(rs3.getInt(1));
+				temp.setTime(today.get(0));
+			}
+			//将查询所得的结果放进整合起来
+			for(int i = 0; i < lists.size(); i++) {
+				HistoryItem item = new HistoryItem();
+				TempItem signInItem = lists.get(i);
+				TempItem disconnectItem = disList.get(i);
+				item.setTime(signInItem.getTime());
+				item.setSignInCount(signInItem.getCount());
+				item.setDisconnectCount(disconnectItem.getCount());
+				if( i == 0) {
+					item.setLeaveCount(temp.getCount());
+				} else {
+					item.setLeaveCount(0);
+				}
+				list.add(item);
+			}
+			result.setResult(list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if( rs != null)
+					rs.close();
+				if(rs1 != null)
+					rs1.close();
+				if( rs3 != null)
+					rs3.close();
+				if(stmt != null)
+					stmt.close();
+				if( connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 得到几天的日期
+	 * @param d
+	 * @return
+	 */
+	public List<String> getDate(int d) {
+		List<String> list = new ArrayList<String>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String today = sdf.format(new Date());
+		list.add(today);
+		for(int i = 0; i < d-1; i++) {
+			String[] temps = list.get(i).split("-");
+			int tempD = Integer.parseInt(temps[2]) - 1;
+			int tempM = Integer.parseInt(temps[1]);
+			if( tempD <= 0) {
+				tempM -= 1;
+				tempD = calDate(tempM);
+			}
+			String tempDStr = tempD  < 10 ? "0" + tempD : tempD + "";
+			String tempMStr = tempM  < 10 ? "0" + tempM : tempM + "";
+			list.add(temps[0] + "-" + tempMStr + "-" + tempDStr);
+		}
+		return list;
+	}
+	
+	/**
+	 * 根据月份计算当月最大的天数
+	 * @param tempM 月份
+	 * @return
+	 */
+	private int calDate(int tempM) {
+		int d = 30;
+		switch( tempM ) {
+		case 1:
+			d = 31;
+			break;
+		case 2:
+			d = 29;
+			break;
+		case 3:
+			d = 31;
+			break;
+		case 4:
+			d = 30;
+			break;
+		case 5:
+			d = 31;
+			break;
+		case 6:
+			d = 30;
+			break;
+		case 7:
+			d = 31;
+			break;
+		case 8:
+			d = 31;
+			break;
+		case 9:
+			d = 30;
+			break;
+		case 10:
+			d = 31;
+			break;
+		case 11:
+			d = 30;
+			break;
+		case 12:
+			d = 31;
+			break;
+		}
+		return d;
+	}
 	
 } 

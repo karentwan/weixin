@@ -6,7 +6,7 @@ package com.weixin.exception;
  */
 public class NullIdException extends Exception{
 	
-	public NullIdException(){}
+	public NullIdException() {}
 	
 	public NullIdException(String msg) {
 		super(msg);

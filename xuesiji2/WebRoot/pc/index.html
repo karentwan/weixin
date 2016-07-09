@@ -7,7 +7,7 @@
 
 	<link rel="stylesheet" href="css/iconfont.css">
 	<link rel="stylesheet" href="css/style.css">
-
+	<script src="js/moment.js"></script>
 	<script src="js/utility.js"></script>
 	<script>
 		var requestConfig = {
@@ -68,7 +68,7 @@
 				<li class="sidebar-date">
 					<span>当前日期</span>
 					<span class="date">
-						<script>var time = (new Date().getFullYear()) +"-"+ ((new Date().getMonth()) + 1) +"-"+ (new Date().getDate());document.write(time)</script>
+						<script>var time = moment().format("YYYY-MM-DD");document.write(time);</script>
 					</span>
 				</li>
 			</ul>
@@ -115,7 +115,7 @@
 			</div>
 			<div class="table table-summary" style="padding-bottom:4em;">
 				<h3>历史数据</h3>
-				<table>
+				<table id="totalData">
 					<thead>
 						<tr>
 							<th>时间</th>
@@ -125,6 +125,7 @@
 						</tr>
 					</thead>
 					<tbody>
+
 					</tbody>
 					<tfoot>
 						<tr>
@@ -140,6 +141,37 @@
 	</div>
 	
 	<script>
+		var totalData = [];
+		var renderTotalData = function(){
+			console.log("renderTotalData");
+			var outer = document.getElementById("totalData");
+			var html = '';
+			var totalSignInNum = 0, totalLeaveNum = 0, totalDiscNum = 0;
+			for (var i = 0; i < totalData.length; i++) {
+				html += '<tr> <td>'+ totalData[i].time +'</td>' +
+						'<td>'+ totalData[i].signInNum +'</td>' +
+						'<td>'+ totalData[i].leaveNum +'</td>' +
+						'<td>'+ totalData[i].disconnectNum +'</td> </tr>' ;
+				totalSignInNum += parseInt(totalData[i].signInNum, 10);
+				totalLeaveNum += parseInt(totalData[i].leaveNum, 10);
+				totalDiscNum += parseInt(totalData[i].disconnectNum, 10);
+			}
+			outer.getElementsByTagName('tbody')[0].innerHTML = html;
+			outer.getElementsByTagName('tfoot')[0].innerHTML = '<tr>' +
+																'<th>总计</th>' +
+																'<th>'+ totalSignInNum +'</th>' +
+																'<th>'+ totalLeaveNum +'</th>' +
+																'<th>'+ totalDiscNum +'</th>' +
+															   '</tr>';
+		};
+		var storeData = function(result){
+			// result: {"time":"2016-06-15","signInNum":1,"leaveNum":0,"disconnectNum":20}
+			totalData.push(JSON.parse(result));
+
+			if(totalData.length > 4){
+				renderTotalData();
+			}
+		};
 		// 数据填充
 		var render = function(){
 
@@ -151,7 +183,39 @@
 
 			sign.innerHTML = data.summary.signIn;
 			disconnect.innerHTML = data.summary.disconnect;
-			leave.innerHTML = data.summary.leave;
+			leave.innerHTML = data.summary.leave;	
+
+			// total data request
+			request({
+				url: "http://wsd.chxxi614.com/xuesiji/count",
+				method: "POST",
+				data: {name: data.username, time: moment().subtract("18","hours").format("YYYY-MM-DD")},
+				callback: storeData
+			});
+			request({
+				url: "http://wsd.chxxi614.com/xuesiji/count",
+				method: "POST",
+				data: {name: data.username, time: moment().subtract("2","days").format("YYYY-MM-DD")},
+				callback: storeData
+			});
+			request({
+				url: "http://wsd.chxxi614.com/xuesiji/count",
+				method: "POST",
+				data: {name: data.username, time: moment().subtract("3","days").format("YYYY-MM-DD")},
+				callback: storeData
+			});
+			request({
+				url: "http://wsd.chxxi614.com/xuesiji/count",
+				method: "POST",
+				data: {name: data.username, time: moment().subtract("4","days").format("YYYY-MM-DD")},
+				callback: storeData
+			});
+			request({
+				url: "http://wsd.chxxi614.com/xuesiji/count",
+				method: "POST",
+				data: {name: data.username, time: moment().subtract("5","days").format("YYYY-MM-DD")},
+				callback: storeData
+			});
 		};
 
 //		window.onload = render;

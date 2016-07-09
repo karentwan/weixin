@@ -162,6 +162,42 @@
     	<servlet-name>deleteClass</servlet-name>
     	<url-pattern>/deleteClass</url-pattern>
     </servlet-mapping>
+    <!-- 查询签到人数 -->
+  <servlet>
+    	<servlet-name>subSignIn</servlet-name>
+    	<servlet-class>com.weixin.servlet.SubSignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>subSignIn</servlet-name>
+    	<url-pattern>/subSignIn</url-pattern>
+    </servlet-mapping>
+    <!-- 查询请假的人数 -->
+  <servlet>
+    	<servlet-name>subLeave</servlet-name>
+    	<servlet-class>com.weixin.servlet.SubLeaveServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>subLeave</servlet-name>
+    	<url-pattern>/subLeave</url-pattern>
+    </servlet-mapping>
+    <!-- 查询未签到的人数 -->
+  <servlet>
+    	<servlet-name>subDisconnect</servlet-name>
+    	<servlet-class>com.weixin.servlet.SubDisconnectServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>subDisconnect</servlet-name>
+    	<url-pattern>/subDisconnect</url-pattern>
+    </servlet-mapping>
+    <!-- 查询近来几天的历史数据 -->
+  <servlet>
+    	<servlet-name>historyQuery</servlet-name>
+    	<servlet-class>com.weixin.servlet.HistoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>historyQuery</servlet-name>
+    	<url-pattern>/history</url-pattern>
+    </servlet-mapping>
     
     
     <!-- 登陆页面的过滤器 -->

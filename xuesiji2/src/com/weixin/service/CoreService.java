@@ -1,13 +1,17 @@
 package com.weixin.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.dom4j.DocumentException;
+import com.weixin.model.Article;
 import com.weixin.model.BaseMessage;
 import com.weixin.model.Image;
 import com.weixin.model.ImageMessage;
+import com.weixin.model.NewsMessage;
 import com.weixin.model.TextMessage;
 import com.weixin.util.Constant;
 import com.weixin.util.MessageUtil;
@@ -61,6 +65,20 @@ public class CoreService {
 			} else if( content.contains("成绩") || content.contains("查询")) {
 				text.setContent("<a href=\"http://search1.jxedu.gov.cn/searchProject/lookComputerSearchVm.action\">计算机二级成绩查询 </a>");
 				respStr = MessageUtil.clazzToXml(text);
+			} else if(content.contains("绑定") || content.contains("签到")) {
+				NewsMessage news = new NewsMessage();
+				MessageUtil.loadDataFromBase(base, news);
+				news.setMsgType(Constant.RESP_TYPE_NEWS);
+				Article  article = new Article();
+				article.setTitle("《微信身份绑定流程》");
+				article.setDescription("以后用微信就能点到请假了!");
+				article.setPicUrl("http://mmbiz.qpic.cn/mmbiz/aaSJ69FohNLU9V1g8yaibZnW7dujsLoYRrLJq3VibthVvCrUkoGpR6aVaxNkntL77VpxyTWmDkdgvT0Pk0y2IPEw/0?wx_fmt=jpeg");
+				article.setUrl("http://mp.weixin.qq.com/s?__biz=MzAwNjgzMDY5MA==&mid=518071694&idx=1&sn=5b56d3b10ed33ea20860d4dc1c1137bb#rd");
+				news.setArticleCount(1);
+				List<Article> list = new ArrayList<Article>();
+				list.add(article);
+				news.setArticles(list);
+				respStr = MessageUtil.clazzToXml(news);
 			} else {
 				text.setContent("您的留言我们已经收到!");
 				respStr = MessageUtil.clazzToXml(text);

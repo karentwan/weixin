@@ -332,6 +332,7 @@ public class SignInDao {
 		}
 		return name;
 	}
+	
 	/**
 	 * 统计所有的结果
 	 * @param name 辅导员姓名
@@ -346,8 +347,10 @@ public class SignInDao {
 		String leaveSql = "select count(account) from tb_leave where instructor_name='"
 				+ ""+ name +"' and startTime <= '"+time +"' and endTime >= '"+time+"'";
 		//查询未签到的sql语句
-		String unSignSql = "select count(account) from tb_student where account not in "
-				+ "(select account from tb_sign_in where instructor_name='"+name +"' and time='"+time+"')";
+		String unSignSql = "select count(s.account) from tb_student as s right join tb_class as "
+				+ "c on s.class_id=c.id  left join tb_instru as i on  c.instructor_id=i.id where " + 
+							"s.account not in (select account from tb_sign_in "
+							+ "where instructor_name='" + name + "'  and time='" + time + "') and i.name='" + name + "'";
 		Statement stmt = null;
 		ResultSet rs1 = null;
 		ResultSet rs2 = null;

@@ -19,8 +19,6 @@ public class CountServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		String name = request.getParameter("name");
 		String time = request.getParameter("time");
-System.out.println("name:" + name);
-System.out.println("time:" + time);
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();

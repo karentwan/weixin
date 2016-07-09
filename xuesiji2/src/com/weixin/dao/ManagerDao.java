@@ -7,9 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
-
 import com.weixin.util.Db;
 
 /**
@@ -153,7 +151,7 @@ public class ManagerDao {
 	 */
 	public List<String> queryConfidomClass() {
 		Connection conn = Db.getConnection();
-		String sql = "select num from tb_class where instructor_id=0";
+		String sql = "select num from tb_class where instructor_id=0 order by num";
 		Statement stmt = null;
 		ResultSet rs = null;
 		List<String> list = new ArrayList<String>();

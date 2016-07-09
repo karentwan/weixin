@@ -19,7 +19,7 @@ table {
 html {
   width: 100%;
   height: 100%; }
-
+.sidebar-user{display:none;}
 body, ul, h1, h2, p {
   margin: 0;
   padding: 0; }

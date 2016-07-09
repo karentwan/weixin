@@ -21,7 +21,7 @@ import com.weixin.util.WeixinUtil;
 public class EventService {
 	
 	/*
-	 * 数据库操作的到层
+	 * 签到查询的dao层
 	 */
 	private static SignInDao signInDao = SignInDao.getInstance();
 	
@@ -55,7 +55,6 @@ public class EventService {
 			String time = sdf.format(new Date());
 			//创建签到回复信息
 			TextMessage signText = new TextMessage();
-System.out.println("hour:\t" + hour);
 			if( account.equals("")) {
 				signText.setContent("<a href=\""+ WeixinUtil.prop.getProperty("xuesiji")+"/mobile/bind_s.html?openId="+ base.getToUserName() +"\">点我绑定微信号</a>");
 			} else if( hour >= 23 || hour < 19) {

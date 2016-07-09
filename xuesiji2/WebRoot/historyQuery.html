@@ -1,0 +1,91 @@
+<html >
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			历史数据查询测试
+		</title>
+		
+	</head>
+		<style>
+			.result .p{
+				background-color: red ;
+			}
+			
+			
+		</style>
+
+	
+	<body>
+		<script>
+			
+				var obj = {
+					response : '',
+					send : function () {
+						var url = "http://localhost:8080/weixin2.0/history";
+						var http = new XMLHttpRequest;
+						//ajax打开url,并开启异步执行
+						http.open("POST", url, true);
+						http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+						http.send("name=admin&dateCount=5");
+						//当服务器有响应的时候会调用这个方法
+						http.onreadystatechange = function() {
+							if(http.readyState == 4 && http.status == 200) {
+								obj.response = http.responseText;
+								console.log(obj.response);
+							}
+						}
+					
+					}
+				
+				}
+				
+				function clickEvent() {
+					//先发送请求并
+					obj.send();
+					var re = document.getElementsByTagName("div");
+					for(var i in re) {
+						if(re[i].className == "result" && obj.response) {
+							re[i].innerText = obj.response;
+						}
+					}
+				}
+				
+			</script>
+			
+		  
+		<br/>
+		<div id="result">
+			<button type="button" onclick="clickEvent()" value="history"/>
+			这是一个用来发送请求的div
+		</div>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+
+		
+		
+		<div class="result">
+			<button type="button" onclick="resultEvent()" />
+			<p class="p">
+				这是一个用来显示结果的
+			</p>
+		</div>
+		<script>
+				function resultEvent() {
+					var p = document.getElementsByTagName("p");
+					for(var t in p) {
+						
+						if(p[t].className == "p") {
+							p[t].innerText = obj.response;
+						}			
+											
+					}
+				}
+		
+		</script>
+		
+	
+	
+	</body>
+</html>

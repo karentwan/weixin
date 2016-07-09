@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="../css/iconfont.css">
 	<link rel="stylesheet" href="../css/style.css">
 	<link rel="stylesheet" href="../css/record.css">
-
+	<script src="../js/moment.js"></script>
 	<script src="../js/utility.js"></script>
 	<script>
 		var requestConfig = {
@@ -66,7 +66,7 @@
 				<li class="sidebar-date">
 					<span>当前日期</span>
 					<span class="date">
-						<script>var time = (new Date().getFullYear()) +"-"+ ((new Date().getMonth()) + 1) +"-"+ (new Date().getDate());document.write(time)</script>
+						<script>var time = moment().format("YYYY-MM-DD");document.write(time);</script>
 					</span>
 				</li>
 			</ul>
@@ -88,32 +88,11 @@
 				<h1>考勤管理</h1>
 				<span>汇总信息请点击左侧‘信息总览’</span>
 			</div> -->
-<!-- 			<div class="panel-list">
-				<div class="panel panel-normal">
-					<h3>
-						<i class="iconfont icon-class"></i>
-						今日签到人数
-					</h3>
-					<p>56</p>
-				</div>
-				<div class="panel panel-primary">
-					<h3>
-						<i class="iconfont icon-leave"></i>
-						今日请假人数
-					</h3>
-					<p>23</p>
-				</div>
-				<div class="panel panel-danger">
-					<h3>今日失联人数</h3>
-					<p>9</p>
-				</div>
-			</div> -->
+
 			<div class="table table-detail">
 				<div class="buttons-class" id="class-btns" style="display:none">
 					<h3>班级选择</h3>
-<!-- 					<button class="active">130443</button>
-					<button>130443</button>
--->				</div>
+				</div>
 				<table id="table">
 					<thead>
 						<tr>
@@ -149,10 +128,9 @@
 	<script>
 		// 默认渲染方式 显示统计汇总
 		var defaultRender = function(){
-			var user = data.userName;
-			var Y = new Date().getFullYear();
-			var m = new Date().getMonth() > 10 ? new Date().getMonth() : '0' + (new Date().getMonth());
-			var d = new Date().getDate();
+			console.log(data);
+			var user = data.username;
+			
 			var success = function(rep){
 				var json = JSON.parse(rep);
 				render(json);
@@ -160,8 +138,7 @@
 			request({
 				url: "http://wsd.chxxi614.com/xuesiji/count",
 				method: "POST",
-		//		data: {name: user, time: Y+'-'+m+'-'+d},
-				data: {name: "万海燕", time: Y+'-'+m+'-'+d},
+				data: {name: user, time: moment().subtract("18","hours").format("YYYY-MM-DD")},
 				callback: success
 			});
 		};
@@ -385,7 +362,7 @@
 				el.innerHTML = klass[i];
 				btns.appendChild(el);
 			}
-		}
+		};
 		// 首次加载初始化
 		var init = function(){
 			classRender();

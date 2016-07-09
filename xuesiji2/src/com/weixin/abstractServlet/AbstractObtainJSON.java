@@ -44,7 +44,7 @@ public abstract class AbstractObtainJSON extends HttpServlet{
 	public abstract void processJSON(JSONObject obj);
 	
 	/**
-	 * 得到状态吗，以 供服务器返回给客户端
+	 * 得到状态码，以 供服务器返回给客户端
 	 * @return
 	 */
 	public abstract String getCode();

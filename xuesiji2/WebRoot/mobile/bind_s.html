@@ -21,6 +21,30 @@
         <div class="content">
             <div class="list-block">
                 <ul>
+                	<li>
+                	    <div class="item-content">
+                	        <div class="item-media"><i class="icon icon-form-name"></i></div>
+                	        <div class="item-inner">
+                	            <div class="item-title label">班级</div>
+                	            <div class="item-input">
+                	                <input type="number" id="class" name="class" placeholder="请输入6位数字" onblur="verify(this, 5)">
+                	            </div>
+                	        </div>
+                	    </div>
+                	</li>
+                	
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">学号</div>
+                                <div class="item-input">
+                                    <input type="number" id="account" name="account" placeholder="请输入8位数字" onblur="verify(this, 7)"  >
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
                     <li>
                         <div class="item-content">
                             <div class="item-media"><i class="icon icon-form-name"></i></div>
@@ -28,28 +52,6 @@
                                 <div class="item-title label">姓名</div>
                                 <div class="item-input">
                                     <input type="text" id="name" name="name" placeholder="Your Name">
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item-content">
-                            <div class="item-media"><i class="icon icon-form-name"></i></div>
-                            <div class="item-inner">
-                                <div class="item-title label">学号</div>
-                                <div class="item-input">
-                                    <input type="number" id="account" name="account" placeholder="Your Account">
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item-content">
-                            <div class="item-media"><i class="icon icon-form-name"></i></div>
-                            <div class="item-inner">
-                                <div class="item-title label">班级</div>
-                                <div class="item-input">
-                                    <input type="number" id="class" name="class" placeholder="Your Class ID">
                                 </div>
                             </div>
                         </div>
@@ -120,6 +122,14 @@
                 });
             }); 
         });
+	function verify(f, i) {
+		var reg = new RegExp("^[1-9][0-9]{" + i + "}$", "g");
+		if(!reg.exec(f.value)) {
+			alert("输入失误,请重新输入!");
+			f.focus();
+		}
+			
+	}
     </script>
     <!-- 姓名 -->
     <!-- 工号 -->
